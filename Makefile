@@ -1,7 +1,7 @@
 PY := $(if $(wildcard .venv/bin/python),.venv/bin/python,python3)
 RUN := PYTHONPATH=src $(PY)
 
-.PHONY: setup describe validate ingest map analyze gate1 gate2 test all
+.PHONY: setup describe validate ingest map payments analyze gate1 gate2 test all
 
 setup:
 	python3 -m venv .venv && .venv/bin/pip install -q -r requirements.txt
@@ -14,6 +14,9 @@ validate:
 
 ingest:
 	$(RUN) -m rxgenome.pipeline ingest
+
+payments:
+	$(RUN) -m rxgenome.pipeline payments
 
 map:
 	$(RUN) -m rxgenome.pipeline map

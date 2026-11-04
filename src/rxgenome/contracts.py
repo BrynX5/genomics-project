@@ -248,6 +248,36 @@ PARTD_DRUG_YEAR = Table(
     ),
 )
 
+PAYMENTS_DRUG_YEAR = Table(
+    name="payments_drug_year",
+    path="data/interim/payments_drug_year.csv",
+    layer="interim",
+    owner="ingest-cms",
+    description="Q3c: Open Payments general payments (not research) naming a negotiated drug in any of the 5 product slots, per program year.",
+    key=("drug_id", "program_year"),
+    columns=(
+        Col("drug_id", "str", "From negotiated_drugs.", pattern=RE_SLUG),
+        Col("program_year", "int", "Open Payments program year.", min=2013, max=2030),
+        Col("general_payments_usd", "float", "Sum of total_amount_of_payment_usdollars. A record naming several products counts in full for each.", min=0),
+        Col("n_records", "int", "Payment records (one record may bundle several payments).", min=0),
+        Col("product_names", "str", "Product name spellings matched, ';'-separated."),
+    ),
+)
+
+PAYMENTS_YEAR_TOTAL = Table(
+    name="payments_year_total",
+    path="data/interim/payments_year_total.csv",
+    layer="interim",
+    owner="ingest-cms",
+    description="Q3c baseline: all Open Payments general payments whose first product is a drug or biological, per program year.",
+    key=("program_year",),
+    columns=(
+        Col("program_year", "int", "Open Payments program year.", min=2013, max=2030),
+        Col("drug_bio_payments_usd", "float", "Sum of payments with product slot 1 = Drug or Biological.", min=0),
+        Col("n_records", "int", "Payment records.", min=0),
+    ),
+)
+
 DRUG_TARGET = Table(
     name="drug_target",
     path="data/interim/drug_target.csv",
@@ -420,12 +450,56 @@ CUT_DRIVER_STATS = Table(
     ),
 )
 
+PAYMENTS_CHANGE = Table(
+    name="payments_change",
+    path="data/processed/payments_change.csv",
+    layer="processed",
+    owner="analyze-question",
+    description="Q3c: Open Payments general payments naming each negotiated drug, the year before vs the year after selection, against the market.",
+    key=("drug_id",),
+    columns=(
+        Col("drug_id", "str", "From negotiated_drugs.", pattern=RE_SLUG),
+        Col("cycle", "int", "Negotiation cycle.", allowed=frozenset(CYCLES)),
+        Col("pre_year", "int", "Last full program year before the selected drug publication date.", min=2013, max=2030),
+        Col("post_year", "int", "First program year mostly after it (publication before 1 July -> that year, else the next).", min=2013, max=2031),
+        Col("pre_usd", "float", "General payments naming the drug in pre_year.", required=False, min=0),
+        Col("post_usd", "float", "General payments naming the drug in post_year (empty if not yet published).", required=False, min=0),
+        Col("drug_ratio", "float", "post_usd / pre_usd.", required=False, min=0),
+        Col("market_ratio", "float", "Same ratio for all drug/biological general payments.", required=False, min=0),
+        Col("relative_change", "float", "drug_ratio / market_ratio - 1: change beyond the market trend.", required=False, min=-1),
+    ),
+)
+
+PAYMENTS_SUMMARY = Table(
+    name="payments_summary",
+    path="data/processed/payments_summary.csv",
+    layer="processed",
+    owner="analyze-question",
+    description="Q3c by cycle: median change in payments naming the selected drugs, against the market change.",
+    key=("cycle",),
+    columns=(
+        Col("cycle", "int", "Negotiation cycle.", allowed=frozenset(CYCLES)),
+        Col("pre_year", "int", "Before year.", min=2013, max=2030),
+        Col("post_year", "int", "After year.", min=2013, max=2031),
+        Col("n_drugs", "int", "Drugs with payments in both years.", min=0),
+        Col("median_drug_ratio", "float", "Median post/pre ratio across those drugs.", required=False, min=0),
+        Col("market_ratio", "float", "post/pre ratio for all drug/biological general payments.", required=False, min=0),
+        Col("median_relative_change", "float", "Median of drug_ratio / market_ratio - 1.", required=False, min=-1),
+        Col("n_fell_vs_market", "int", "Drugs whose payments changed less than the market (relative_change < 0).", min=0),
+        Col("n_promoted", "int", "Drugs with at least $1M of general payments in pre_year (actively promoted).", min=0),
+        Col("median_relative_change_promoted", "float", "Median relative_change among the promoted drugs.", required=False, min=-1),
+        Col("aggregate_drug_ratio", "float", "Sum of post_usd / sum of pre_usd over the cycle's drugs (dominated by big spenders).", required=False, min=0),
+        Col("aggregate_relative_change", "float", "aggregate_drug_ratio / market_ratio - 1.", required=False, min=-1),
+    ),
+)
+
 TABLES: dict[str, Table] = {
     t.name: t
     for t in (
         NEGOTIATED_DRUGS, MANUAL_MAPPINGS, TARGET_CLASSES_REF, FIRM_LABELERS, FDA_APPROVALS, CYCLE_DATES,
-        PARTD_DRUG_YEAR, PARTD_MFTR_YEAR, DRUG_TARGET, UNMAPPED,
-        TARGET_SPEND, PRICE_CUTS, CLASS_SUMMARY, FIRM_EXPOSURE, CUT_DRIVERS, CUT_DRIVER_STATS,
+        PARTD_DRUG_YEAR, PARTD_MFTR_YEAR, PAYMENTS_DRUG_YEAR, PAYMENTS_YEAR_TOTAL, DRUG_TARGET, UNMAPPED,
+        TARGET_SPEND, PRICE_CUTS, CLASS_SUMMARY, FIRM_EXPOSURE, CUT_DRIVERS, CUT_DRIVER_STATS, PAYMENTS_CHANGE,
+        PAYMENTS_SUMMARY,
     )
 }
 
@@ -448,6 +522,7 @@ CROSS_CHECKS: list[tuple[str, CrossCheck]] = [
     ("drug_target.drug_id exists", _fk("drug_target", "drug_id", "negotiated_drugs", "drug_id")),
     ("unmapped.drug_id exists", _fk("unmapped", "drug_id", "negotiated_drugs", "drug_id")),
     ("price_cuts.drug_id exists", _fk("price_cuts", "drug_id", "negotiated_drugs", "drug_id")),
+    ("payments_drug_year.drug_id exists", _fk("payments_drug_year", "drug_id", "negotiated_drugs", "drug_id")),
     ("fda_approvals.drug_id exists", _fk("fda_approvals", "drug_id", "negotiated_drugs", "drug_id")),
     ("every target in target_spend has a class", _fk("target_spend", "uniprot", "target_classes", "uniprot")),
 ]

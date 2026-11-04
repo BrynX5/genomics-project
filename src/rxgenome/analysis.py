@@ -17,8 +17,8 @@ import re
 
 import pandas as pd
 
-from rxgenome.contracts import (CLASS_SUMMARY, CUT_DRIVER_STATS, CUT_DRIVERS, FIRM_EXPOSURE, PRICE_CUTS,
-                                TARGET_SPEND)
+from rxgenome.contracts import (CLASS_SUMMARY, CUT_DRIVER_STATS, CUT_DRIVERS, FIRM_EXPOSURE, PAYMENTS_CHANGE,
+                                PAYMENTS_SUMMARY, PRICE_CUTS, TARGET_SPEND)
 from rxgenome.validate import ROOT, load
 
 FIG = ROOT / "figures"
@@ -168,6 +168,48 @@ def cut_driver_stats(cdr: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows)[CUT_DRIVER_STATS.column_names]
 
 
+PROMOTED_MIN_USD = 1_000_000  # a drug counts as actively promoted with at least this much in general payments in pre_year
+
+
+def selection_years(cd: pd.DataFrame) -> pd.DataFrame:
+    """pre = last full program year before publication; post = first year mostly after it (before 1 July -> same year)."""
+    pub = pd.to_datetime(cd["selected_drug_publication_date"])
+    return cd.assign(pre_year=pub.dt.year - 1, post_year=pub.dt.year + (pub.dt.month >= 7).astype(int))[["cycle", "pre_year", "post_year"]]
+
+
+def payments_change(nd: pd.DataFrame, pdy: pd.DataFrame, pyt: pd.DataFrame, cd: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Q3c: general payments naming each drug, year before vs year after selection, against all drug payments."""
+    d = nd[["drug_id", "cycle"]].merge(selection_years(cd), on="cycle", how="left")
+    amt = pdy.set_index(["drug_id", "program_year"])["general_payments_usd"]
+    tot = pyt.set_index("program_year")["drug_bio_payments_usd"]
+    d["pre_usd"] = [amt.get((r.drug_id, r.pre_year)) for r in d.itertuples()]
+    d["post_usd"] = [amt.get((r.drug_id, r.post_year)) for r in d.itertuples()]
+    has_post = d["post_year"].isin(pdy["program_year"].unique())  # a drug absent in a published year had no payments
+    d.loc[d["pre_usd"].isna() & d["pre_year"].isin(pdy["program_year"].unique()), "pre_usd"] = 0.0
+    d.loc[d["post_usd"].isna() & has_post, "post_usd"] = 0.0
+    d["drug_ratio"] = d["post_usd"] / d["pre_usd"].where(d["pre_usd"] > 0)
+    d["market_ratio"] = d["post_year"].map(tot) / d["pre_year"].map(tot)
+    d["relative_change"] = d["drug_ratio"] / d["market_ratio"] - 1
+    change = d.sort_values(["cycle", "relative_change"])[PAYMENTS_CHANGE.column_names]
+
+    rows = []
+    for (cycle, pre, post), g in change.groupby(["cycle", "pre_year", "post_year"]):
+        ok = g.dropna(subset=["drug_ratio"])
+        promoted = ok[ok["pre_usd"] >= PROMOTED_MIN_USD]
+        mkt = g["market_ratio"].iloc[0]
+        agg = g["post_usd"].sum() / g["pre_usd"].sum() if g["pre_usd"].sum() > 0 and g["post_usd"].notna().any() else None
+        rows.append({"cycle": cycle, "pre_year": pre, "post_year": post, "n_drugs": len(ok),
+                     "median_drug_ratio": ok["drug_ratio"].median() if len(ok) else None,
+                     "market_ratio": mkt,
+                     "median_relative_change": ok["relative_change"].median() if len(ok) else None,
+                     "n_fell_vs_market": int((ok["relative_change"] < 0).sum()),
+                     "n_promoted": len(promoted),
+                     "median_relative_change_promoted": promoted["relative_change"].median() if len(promoted) else None,
+                     "aggregate_drug_ratio": agg,
+                     "aggregate_relative_change": agg / mkt - 1 if agg is not None and pd.notna(mkt) else None})
+    return change, pd.DataFrame(rows)[PAYMENTS_SUMMARY.column_names]
+
+
 # ----------------------------------------------------------------------------- figures
 def figures(ts: pd.DataFrame, pc: pd.DataFrame) -> None:
     import matplotlib
@@ -262,6 +304,44 @@ def cut_driver_figure(cdr: pd.DataFrame) -> None:
     plt.close(fig)
 
 
+def payments_figure(nd: pd.DataFrame, pdy: pd.DataFrame, pyt: pd.DataFrame, cd: pd.DataFrame) -> None:
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    FIG.mkdir(exist_ok=True)
+    sy = selection_years(cd).set_index("cycle")
+    tot = pyt.set_index("program_year")["drug_bio_payments_usd"]
+    years = sorted(pdy["program_year"].unique())
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4.4), sharey=True)
+    for ax, (cycle, s) in zip(axes, sy.iterrows()):
+        base = int(s["pre_year"])
+        idx = []
+        for drug in nd.loc[nd["cycle"] == cycle, "drug_id"]:
+            ser = pdy[pdy["drug_id"] == drug].set_index("program_year")["general_payments_usd"].reindex(years, fill_value=0.0)
+            if ser.get(base, 0) >= PROMOTED_MIN_USD:
+                idx.append(ser / ser[base] * 100)
+                ax.plot(years, idx[-1], color="#b8c7dd", lw=0.9, zorder=1)
+        if idx:
+            ax.plot(years, pd.concat(idx, axis=1).median(axis=1), color="#3b6ea8", lw=2.4, label=f"Median of {len(idx)} promoted drugs", zorder=3)
+        ax.plot(years, tot.reindex(years) / tot[base] * 100, color="#333", ls="--", lw=1.6, label="All drug/biologic payments", zorder=2)
+        pub = cd.set_index("cycle").loc[cycle, "selected_drug_publication_date"]
+        ax.axvline(pd.Timestamp(pub).year + pd.Timestamp(pub).dayofyear / 366 - 0.5, color="#c0392b", ls=":", lw=1.2)
+        ax.set_title(f"{cycle} cycle (selected {pub})", loc="left", fontsize=10)
+        ax.set_xlabel("Open Payments program year")
+        ax.set_yscale("log")
+        ax.legend(fontsize=7.5, loc="lower left")
+    axes[0].set_ylabel("Index, year before selection = 100")
+    fig.suptitle("Manufacturer payments to clinicians naming the negotiated drugs", x=0.01, ha="left")
+    fig.text(0.01, 0.01, "General payments (meals, speaking, consulting, travel), not research. A payment naming several products counts in full "
+             "for each.\nOnly drugs with at least $1M of payments in the year before selection. Red dotted line: selection date. Log scale. "
+             "Source: CMS Open Payments.", fontsize=7.5, color="#555")
+    fig.tight_layout(rect=(0, 0.07, 1, 0.95))
+    fig.savefig(FIG / "q3c_payments.png", dpi=200)
+    plt.close(fig)
+
+
 def main() -> None:
     from rxgenome.pipeline import write_validated
 
@@ -278,6 +358,12 @@ def main() -> None:
         write_validated(cdr, CUT_DRIVERS)
         write_validated(cut_driver_stats(cdr), CUT_DRIVER_STATS)
         cut_driver_figure(cdr)
+    pdy, pyt = load("payments_drug_year"), load("payments_year_total")
+    if pdy is not None and pyt is not None and cd is not None:  # Q3c, likewise
+        chg, summ = payments_change(_need("negotiated_drugs"), pdy, pyt, cd)
+        write_validated(chg, PAYMENTS_CHANGE)
+        write_validated(summ, PAYMENTS_SUMMARY)
+        payments_figure(_need("negotiated_drugs"), pdy, pyt, cd)
     figures(ts, pc)
     print(f"[ok] figures written to {FIG.relative_to(ROOT)}/")
 

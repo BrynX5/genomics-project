@@ -197,6 +197,40 @@ def test_cut_drivers_and_stats():
     assert st.loc[("median_cut", "long"), "value"] == 0.8 and st.loc[("median_cut", "long"), "n"] == 1
 
 
+def test_selection_years_rule():
+    cd = pd.DataFrame({"cycle": [2026, 2027], "selected_drug_publication_date": ["2023-08-29", "2025-01-17"]})
+    sy = analysis.selection_years(cd).set_index("cycle")
+    assert tuple(sy.loc[2026]) == (2022, 2024) and tuple(sy.loc[2027]) == (2024, 2025)
+
+
+def test_payments_change_against_market():
+    nd = pd.DataFrame({"drug_id": ["a", "b", "c"], "cycle": [2026, 2026, 2026]})
+    cd = pd.DataFrame({"cycle": [2026], "selected_drug_publication_date": ["2023-08-29"]})
+    pdy = pd.DataFrame({"drug_id": ["a", "a", "b", "c"], "program_year": [2022, 2024, 2022, 2024],
+                        "general_payments_usd": [100.0, 50.0, 10.0, 7.0], "n_records": [1, 1, 1, 1], "product_names": ["A"] * 4})
+    pyt = pd.DataFrame({"program_year": [2022, 2023, 2024], "drug_bio_payments_usd": [1000.0, 1000.0, 2000.0], "n_records": [1, 1, 1]})
+    chg, summ = analysis.payments_change(nd, pdy, pyt, cd)
+    c = chg.set_index("drug_id")
+    assert c.loc["a", "drug_ratio"] == 0.5 and c.loc["a", "market_ratio"] == 2.0 and c.loc["a", "relative_change"] == -0.75
+    assert c.loc["b", "post_usd"] == 0.0 and c.loc["b", "drug_ratio"] == 0.0  # absent in a published year = no payments
+    assert pd.isna(c.loc["c", "drug_ratio"])  # no pre-year payments: ratio undefined
+    s = summ.iloc[0]
+    assert s["n_drugs"] == 2 and s["n_fell_vs_market"] == 2 and s["median_drug_ratio"] == 0.25
+    assert s["n_promoted"] == 0 and pd.isna(s["median_relative_change_promoted"])  # all pre_usd below $1M
+    assert s["aggregate_drug_ratio"] == pytest.approx(57 / 110) and s["aggregate_relative_change"] == pytest.approx(57 / 110 / 2 - 1)
+
+
+def test_reshape_payments_maps_spellings():
+    nd = pd.DataFrame({"drug_id": ["eliquis"], "brand": ["Eliquis"]})
+    bp = pd.DataFrame({"program_year": [2024, 2024, 2024], "slot": [1, 2, 1], "product_name": ["ELIQUIS", "Eliquis", "Other"],
+                       "total_usd": ["10.5", "2", "99"], "n_records": ["3", "1", "9"]})
+    bk = pd.DataFrame({"program_year": [2024, 2024, 2024], "product_kind": ["Drug", "Biological", "Device"],
+                       "total_usd": ["100", "50", "999"], "n_records": ["5", "5", "5"]})
+    drug, total = pipeline.reshape_payments(bp, bk, nd)
+    assert drug.iloc[0]["general_payments_usd"] == 12.5 and drug.iloc[0]["product_names"] == "ELIQUIS;Eliquis"
+    assert total.iloc[0]["drug_bio_payments_usd"] == 150
+
+
 def test_gate1_reports_unmapped_drugs(project):
     _write_synthetic_inputs(project, skip={"eliquis", "xarelto", "ofev"})
     errs = "\n".join(validate.gate(1))

@@ -4,6 +4,8 @@ One entry per decision that changes a contract, the scope, or a method. Newest f
 
 Format: `YYYY-MM-DD - decision - why - what changed`
 
+- 2026-11-03 - Q3c uses server-side totals from the Open Payments API, not file downloads; payments are compared with the year before selection, against all drug/biological payments; drugs with <$1M in the pre-year are reported but not used for the promoted-drug median or the figure; the NPI-prescribing join is deferred to Q3c-ii - full files are several GB per year; tiny bases make ratios meaningless - `make payments`, contracts PAYMENTS_DRUG_YEAR, PAYMENTS_YEAR_TOTAL, PAYMENTS_CHANGE, PAYMENTS_SUMMARY
+
 - 2026-11-03 - Q3b uses years since FDA approval (and the statutory monopoly tier) instead of Orange Book patent expiry; 10-K revenue dependence deferred to Q3b-ii - the statute's price ceiling is defined on approval age; patent dates are noisy; revenue data are incomplete for foreign and private firms - contracts FDA_APPROVALS, CYCLE_DATES, CUT_DRIVERS, CUT_DRIVER_STATS; `analysis.cut_drivers`, `analysis.cut_driver_stats`
 
 - 2026-11-03 - Q3a firm = parent company, rolled up from CMS labeler names, by owner decision; joint ventures (ViiV), spun-off companies (Sandoz, Organon, Viatris) and separately listed majority-owned companies (Bausch & Lomb) are left out - ownership in the 2024 spend year is what counts, and each link must have a source - new contracts FIRM_LABELERS, PARTD_MFTR_YEAR, FIRM_EXPOSURE; `pipeline.reshape_cms_mftr`, `analysis.firm_exposure`

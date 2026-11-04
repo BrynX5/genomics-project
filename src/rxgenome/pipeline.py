@@ -18,7 +18,8 @@ import time
 import pandas as pd
 import requests
 
-from rxgenome.contracts import DRUG_TARGET, PARTD_DRUG_YEAR, PARTD_MFTR_YEAR, UNMAPPED
+from rxgenome.contracts import (DRUG_TARGET, PARTD_DRUG_YEAR, PARTD_MFTR_YEAR, PAYMENTS_DRUG_YEAR, PAYMENTS_YEAR_TOTAL,
+                                UNMAPPED)
 from rxgenome.validate import ROOT, load, validate_table
 
 try:
@@ -227,8 +228,100 @@ def map_targets() -> None:
     print(f"[map] {n}/{len(nd)} drugs have a human target; {len(still)} ingredients unmapped")
 
 
+# ----------------------------------------------------------------------------- open payments (Q3c)
+OPEN_PAYMENTS = "https://openpaymentsdata.cms.gov/api/1"
+RAW_OP = ROOT / "data/raw/open_payments_by_product.csv"
+RAW_OP_TOTAL = ROOT / "data/raw/open_payments_by_category.csv"
+OP_NAME = "name_of_drug_or_biological_or_device_or_medical_supply_{}"
+OP_KIND = "indicate_drug_or_biological_or_device_or_medical_supply_1"
+OP_AMOUNT = "total_amount_of_payment_usdollars"
+
+
+def product_name_variants(nd: pd.DataFrame) -> dict[str, str]:
+    """Spellings to look up in Open Payments (matching there is case-sensitive) -> drug_id."""
+    out = {}
+    for d in nd.itertuples():
+        for b in [x.strip() for x in d.brand.split(";")]:
+            for v in (b, b.upper(), b.title(), b.lower()):
+                out[v] = d.drug_id
+    return out
+
+
+def _op_query(dataset_id: str, query: dict, retries: int = 3) -> list[dict]:
+    url = f"{OPEN_PAYMENTS}/datastore/query/{dataset_id}/0"
+    for attempt in range(retries):
+        try:
+            r = requests.post(url, json={**query, "count": False, "results": True}, timeout=600)
+            r.raise_for_status()
+            return r.json().get("results", [])
+        except requests.RequestException as e:
+            print(f"  retry {attempt + 1} for {url} ({e})")
+            time.sleep(5 * (attempt + 1))
+    raise SystemExit(f"Open Payments API unreachable: {url}")
+
+
+def _op_general_datasets() -> dict[int, str]:
+    items = get_json(f"{OPEN_PAYMENTS}/metastore/schemas/dataset/items")
+    out = {}
+    for d in items:
+        m = re.match(r"^(\d{4}) General Payment Data$", d.get("title", ""))
+        if m:
+            out[int(m.group(1))] = d["identifier"]
+    return dict(sorted(out.items()))
+
+
+def pull_open_payments(nd: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Server-side totals of general payments by product name (5 product slots) and by product kind, per year."""
+    if RAW_OP.exists() and RAW_OP_TOTAL.exists():
+        print(f"[op] using cached {RAW_OP.relative_to(ROOT)} (delete it to re-download)")
+        return pd.read_csv(RAW_OP), pd.read_csv(RAW_OP_TOTAL)
+    names = sorted(product_name_variants(nd))
+    by_product, by_kind = [], []
+    for year, ds in _op_general_datasets().items():
+        for slot in range(1, 6):
+            f = OP_NAME.format(slot)
+            res = _op_query(ds, {"conditions": [{"property": f, "value": names, "operator": "in"}],
+                                 "properties": [f, {"expression": {"operator": "sum", "operands": [OP_AMOUNT]}, "alias": "total_usd"},
+                                                {"expression": {"operator": "count", "operands": [f]}, "alias": "n_records"}],
+                                 "groupings": [f], "limit": 500})
+            by_product += [{"program_year": year, "slot": slot, "product_name": r[f], "total_usd": r["total_usd"],
+                            "n_records": r["n_records"]} for r in res]
+            print(f"[op] {year} slot {slot}: {len(res)} names", flush=True)
+        res = _op_query(ds, {"properties": [OP_KIND, {"expression": {"operator": "sum", "operands": [OP_AMOUNT]}, "alias": "total_usd"},
+                                            {"expression": {"operator": "count", "operands": [OP_AMOUNT]}, "alias": "n_records"}],
+                             "groupings": [OP_KIND], "limit": 50})
+        by_kind += [{"program_year": year, "product_kind": r[OP_KIND], "total_usd": r["total_usd"], "n_records": r["n_records"]}
+                    for r in res]
+        print(f"[op] {year} totals by kind: {len(res)} kinds", flush=True)
+    a, b = pd.DataFrame(by_product), pd.DataFrame(by_kind)
+    RAW_OP.parent.mkdir(parents=True, exist_ok=True)
+    a.to_csv(RAW_OP, index=False)
+    b.to_csv(RAW_OP_TOTAL, index=False)
+    return a, b
+
+
+def reshape_payments(by_product: pd.DataFrame, by_kind: pd.DataFrame, nd: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    v = product_name_variants(nd)
+    p = by_product.assign(drug_id=by_product["product_name"].map(v)).dropna(subset=["drug_id"])
+    p[["total_usd", "n_records"]] = p[["total_usd", "n_records"]].apply(pd.to_numeric)
+    drug = (p.groupby(["drug_id", "program_year"], as_index=False)
+             .agg(general_payments_usd=("total_usd", "sum"), n_records=("n_records", "sum"),
+                  product_names=("product_name", lambda s: ";".join(sorted(set(s))))))
+    k = by_kind.assign(total_usd=pd.to_numeric(by_kind["total_usd"]), n_records=pd.to_numeric(by_kind["n_records"]))
+    k = k[k["product_kind"].fillna("").str.strip().str.lower().isin(["drug", "biological"])]
+    total = k.groupby("program_year", as_index=False).agg(drug_bio_payments_usd=("total_usd", "sum"), n_records=("n_records", "sum"))
+    return drug, total
+
+
+def payments() -> None:
+    nd = load("negotiated_drugs")
+    drug, total = reshape_payments(*pull_open_payments(nd), nd)
+    write_validated(drug, PAYMENTS_DRUG_YEAR)
+    write_validated(total, PAYMENTS_YEAR_TOTAL)
+
+
 if __name__ == "__main__":
-    stages = {"ingest": ingest, "map": map_targets}
+    stages = {"ingest": ingest, "map": map_targets, "payments": payments}
     if len(sys.argv) != 2 or sys.argv[1] not in stages:
         raise SystemExit(f"usage: python -m rxgenome.pipeline [{'|'.join(stages)}]")
     stages[sys.argv[1]]()
