@@ -4,6 +4,8 @@ One entry per decision that changes a contract, the scope, or a method. Newest f
 
 Format: `YYYY-MM-DD - decision - why - what changed`
 
+- 2026-11-03 - Q3a firm = parent company, rolled up from CMS labeler names, by owner decision; joint ventures (ViiV), spun-off companies (Sandoz, Organon, Viatris) and separately listed majority-owned companies (Bausch & Lomb) are left out - ownership in the 2024 spend year is what counts, and each link must have a source - new contracts FIRM_LABELERS, PARTD_MFTR_YEAR, FIRM_EXPOSURE; `pipeline.reshape_cms_mftr`, `analysis.firm_exposure`
+
 - 2026-11-03 - Scope extended to a firm track (Q3a exposure, Q3b drivers of the cut, Q3c promotion), approved by the owner after gate 2 - the target view could not answer Q2; firm economics might - docs/status.md Extensions
 
 - 2026-11-03 - New processed table `class_summary` (Q1 gross spend and Q2 price-cut stats by target class), approved by the owner - README rule 3 needs every class-level number to come from data/processed - `contracts.CLASS_SUMMARY`, `analysis.class_summary`

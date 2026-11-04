@@ -13,9 +13,11 @@ Labels are part of correctness: spend is GROSS, prices are LIST vs NEGOTIATED, n
 
 from __future__ import annotations
 
+import re
+
 import pandas as pd
 
-from rxgenome.contracts import CLASS_SUMMARY, PRICE_CUTS, TARGET_SPEND
+from rxgenome.contracts import CLASS_SUMMARY, FIRM_EXPOSURE, PRICE_CUTS, TARGET_SPEND
 from rxgenome.validate import ROOT, load
 
 FIG = ROOT / "figures"
@@ -92,6 +94,32 @@ def class_summary(ts: pd.DataFrame, pc: pd.DataFrame) -> pd.DataFrame:
     return out.sort_values("gross_spend_usd", ascending=False)[CLASS_SUMMARY.column_names]
 
 
+def firm_exposure(nd: pd.DataFrame, mf: pd.DataFrame, fl: pd.DataFrame) -> pd.DataFrame:
+    """Q3a: per parent firm, latest-year gross spend on all drugs and the share in negotiated drugs.
+
+    Manufacturer rows are tagged with a negotiated drug_id by the same regexes as match_spend; a row's
+    firm comes from firm_labelers. Labelers not in firm_labelers count for no firm.
+    """
+    year = int(mf["year"].max())
+    y = mf[(mf["year"] == year) & mf["gross_spend_usd"].notna()].copy()
+    y["drug_id"] = pd.NA
+    for r in nd.itertuples():
+        g, b = re.compile(r.cms_generic_regex, re.I), re.compile(r.cms_brand_regex, re.I)
+        hit = y["generic_name"].map(lambda v: bool(g.search(str(v)))) & y["brand_name"].map(lambda v: bool(b.search(str(v))))
+        y.loc[hit, "drug_id"] = r.drug_id
+    y = y.merge(fl[["cms_mftr_name", "parent_firm"]], left_on="mftr_name", right_on="cms_mftr_name", how="inner")
+    neg = y[y["drug_id"].notna()]
+    out = y.groupby("parent_firm").agg(total_gross_usd=("gross_spend_usd", "sum"), n_labelers=("mftr_name", "nunique"))
+    out = out.join(neg.groupby("parent_firm").agg(
+        negotiated_gross_usd=("gross_spend_usd", "sum"), n_negotiated_drugs=("drug_id", "nunique"),
+        negotiated_drugs=("drug_id", lambda s: ";".join(sorted(set(s)))))).reset_index()
+    out[["negotiated_gross_usd"]] = out[["negotiated_gross_usd"]].fillna(0.0)
+    out["n_negotiated_drugs"] = out["n_negotiated_drugs"].fillna(0).astype(int)
+    out["share_negotiated"] = out["negotiated_gross_usd"] / out["total_gross_usd"]
+    out["spend_year"] = year
+    return out.sort_values("share_negotiated", ascending=False)[FIRM_EXPOSURE.column_names]
+
+
 # ----------------------------------------------------------------------------- figures
 def figures(ts: pd.DataFrame, pc: pd.DataFrame) -> None:
     import matplotlib
@@ -161,6 +189,9 @@ def main() -> None:
     write_validated(ts, TARGET_SPEND)
     write_validated(pc, PRICE_CUTS)
     write_validated(class_summary(ts, pc), CLASS_SUMMARY)
+    fl, mf = load("firm_labelers"), load("partd_mftr_year")
+    if fl is not None and mf is not None:  # Q3a is an extension; skip it until its inputs exist
+        write_validated(firm_exposure(_need("negotiated_drugs"), mf, fl), FIRM_EXPOSURE)
     figures(ts, pc)
     print(f"[ok] figures written to {FIG.relative_to(ROOT)}/")
 

@@ -147,6 +147,34 @@ def test_class_summary_rolls_up_by_class():
     assert cs.loc["Protease", "gross_spend_usd"] == 0 and cs.loc["Protease", "max_pct_cut"] == 0.8
 
 
+def test_reshape_cms_mftr_drops_overall_rows():
+    raw = pd.DataFrame({
+        "Brnd_Name": ["Eliquis", "Eliquis "], "Gnrc_Name": ["Apixaban", "Apixaban"],
+        "Mftr_Name": ["Overall", " BMS Primarycare "], "Tot_Spndng_2023": ["100", "90"], "Tot_Spndng_2024": ["200", ""],
+    })
+    long = pipeline.reshape_cms_mftr(raw)
+    assert set(long["mftr_name"]) == {"BMS Primarycare"} and set(long["brand_name"]) == {"Eliquis"}
+    assert long.set_index("year").loc[2023, "gross_spend_usd"] == 90
+    assert pd.isna(long.set_index("year").loc[2024, "gross_spend_usd"])
+
+
+def test_firm_exposure_by_parent():
+    nd = pd.DataFrame({"drug_id": ["eliquis"], "cms_generic_regex": ["^apixaban$"], "cms_brand_regex": ["^eliquis$"]})
+    mf = pd.DataFrame({
+        "brand_name": ["Eliquis", "Orencia", "Opdivo", "Eliquis", "Other"],
+        "generic_name": ["Apixaban", "Abatacept", "Nivolumab", "Apixaban", "X"],
+        "mftr_name": ["BMS Primarycare", "BMS Primarycare", "Celgene/BMS", "BMS Primarycare", "Unmapped Co"],
+        "year": [2024, 2024, 2024, 2023, 2024],
+        "gross_spend_usd": [60.0, 30.0, 10.0, 999.0, 500.0],  # 2023 row and unmapped labeler must be ignored
+    })
+    fl = pd.DataFrame({"cms_mftr_name": ["BMS Primarycare", "Celgene/BMS"], "parent_firm": ["BMS", "BMS"]})
+    fe = analysis.firm_exposure(nd, mf, fl).set_index("parent_firm")
+    assert list(fe.index) == ["BMS"]
+    assert fe.loc["BMS", "total_gross_usd"] == 100 and fe.loc["BMS", "negotiated_gross_usd"] == 60
+    assert fe.loc["BMS", "share_negotiated"] == 0.6 and fe.loc["BMS", "n_labelers"] == 2
+    assert fe.loc["BMS", "negotiated_drugs"] == "eliquis" and fe.loc["BMS", "spend_year"] == 2024
+
+
 def test_gate1_reports_unmapped_drugs(project):
     _write_synthetic_inputs(project, skip={"eliquis", "xarelto", "ofev"})
     errs = "\n".join(validate.gate(1))

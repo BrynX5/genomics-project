@@ -18,7 +18,7 @@ import time
 import pandas as pd
 import requests
 
-from rxgenome.contracts import DRUG_TARGET, PARTD_DRUG_YEAR, UNMAPPED
+from rxgenome.contracts import DRUG_TARGET, PARTD_DRUG_YEAR, PARTD_MFTR_YEAR, UNMAPPED
 from rxgenome.validate import ROOT, load, validate_table
 
 try:
@@ -104,8 +104,26 @@ def reshape_cms(raw: pd.DataFrame) -> pd.DataFrame:
     return wide.sort_values(["generic_name", "brand_name", "year"])
 
 
+def reshape_cms_mftr(raw: pd.DataFrame) -> pd.DataFrame:
+    """Manufacturer rows (not 'Overall') -> one row per drug per manufacturer per year, gross spend only."""
+    df = raw[raw["Mftr_Name"].str.strip().str.lower() != "overall"].copy()
+    cols = [c for c in df.columns if re.match(r"^Tot_Spndng_\d{4}$", c)]
+    long = df.melt(id_vars=["Brnd_Name", "Gnrc_Name", "Mftr_Name"], value_vars=cols, var_name="col",
+                   value_name="gross_spend_usd")
+    long["year"] = long["col"].str[-4:].astype(int)
+    long["gross_spend_usd"] = pd.to_numeric(long["gross_spend_usd"], errors="coerce")
+    long = long.rename(columns={"Brnd_Name": "brand_name", "Gnrc_Name": "generic_name", "Mftr_Name": "mftr_name"})
+    for c in ("brand_name", "generic_name", "mftr_name"):
+        long[c] = long[c].str.strip()
+    out = (long.groupby(["brand_name", "generic_name", "mftr_name", "year"], as_index=False)
+           .agg(gross_spend_usd=("gross_spend_usd", lambda s: s.sum(min_count=1))))
+    return out.sort_values(["generic_name", "brand_name", "mftr_name", "year"])
+
+
 def ingest() -> None:
-    write_validated(reshape_cms(pull_cms()), PARTD_DRUG_YEAR)
+    raw = pull_cms()
+    write_validated(reshape_cms(raw), PARTD_DRUG_YEAR)
+    write_validated(reshape_cms_mftr(raw), PARTD_MFTR_YEAR)
 
 
 def match_spend(negotiated: pd.DataFrame, partd: pd.DataFrame) -> pd.DataFrame:

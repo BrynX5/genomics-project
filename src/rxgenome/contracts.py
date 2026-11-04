@@ -166,6 +166,39 @@ TARGET_CLASSES_REF = Table(
 )
 
 # ----------------------------------------------------------------------------- interim (generated)
+FIRM_LABELERS = Table(
+    name="firm_labelers",
+    path="data/reference/firm_labelers.csv",
+    layer="reference",
+    owner="curate-reference",
+    description="Maps CMS manufacturer (labeler) names to parent firms for the firms behind the negotiated drugs. Names not listed are not counted for any firm.",
+    key=("cms_mftr_name",),
+    columns=(
+        Col("cms_mftr_name", "str", "CMS Mftr_Name exactly as in the raw file, stripped (CMS truncates at 15 characters)."),
+        Col("parent_firm", "str", "Parent company that owned the labeler in the spend year."),
+        Col("basis", "str", "cms_name = the CMS name itself names the parent; acquisition = an ownership source says so.",
+            allowed=frozenset({"cms_name", "acquisition"})),
+        Col("source_url", "str", "Page that supports the link (CMS dataset, CMS fact sheet, or the acquisition release).", pattern=RE_URL),
+        Col("notes", "str", "Why this name belongs to the parent.", required=False),
+    ),
+)
+
+PARTD_MFTR_YEAR = Table(
+    name="partd_mftr_year",
+    path="data/interim/partd_mftr_year.csv",
+    layer="interim",
+    owner="ingest-cms",
+    description="CMS Part D Spending by Drug, manufacturer rows (not 'Overall'), one row per drug per manufacturer per year. Gross cost.",
+    key=("brand_name", "generic_name", "mftr_name", "year"),
+    columns=(
+        Col("brand_name", "str", "CMS Brnd_Name."),
+        Col("generic_name", "str", "CMS Gnrc_Name (may be truncated by CMS)."),
+        Col("mftr_name", "str", "CMS Mftr_Name, stripped."),
+        Col("year", "int", "Calendar year of the claims.", min=2012, max=2030),
+        Col("gross_spend_usd", "float", "Tot_Spndng: gross drug cost, before rebates.", required=False, min=0),
+    ),
+)
+
 PARTD_DRUG_YEAR = Table(
     name="partd_drug_year",
     path="data/interim/partd_drug_year.csv",
@@ -294,12 +327,35 @@ CLASS_SUMMARY = Table(
     ),
 )
 
+FIRM_EXPOSURE = Table(
+    name="firm_exposure",
+    path="data/processed/firm_exposure.csv",
+    layer="processed",
+    owner="analyze-question",
+    description="Q3a: each parent firm's gross Part D spend and the share of it in negotiated drugs. Gross, before rebates.",
+    key=("parent_firm",),
+    columns=(
+        Col("parent_firm", "str", "From firm_labelers."),
+        Col("spend_year", "int", "Year of the spending data.", min=2012, max=2030),
+        Col("total_gross_usd", "float", "Gross Part D spend on all drugs from the firm's mapped labelers.", min=0),
+        Col("negotiated_gross_usd", "float", "Of which, gross spend on the negotiated drugs.", min=0),
+        Col("share_negotiated", "float", "negotiated_gross_usd / total_gross_usd.", min=0, max=1),
+        Col("n_negotiated_drugs", "int", "Negotiated drugs with spend under this firm.", min=0),
+        Col("negotiated_drugs", "str", "drug_ids, ';'-separated.", required=False),
+        Col("n_labelers", "int", "Mapped labeler names with spend in the year.", min=0),
+    ),
+    checks=(
+        Check("negotiated spend is within total", lambda d: d["negotiated_gross_usd"] <= d["total_gross_usd"] + 1e-6),
+        Check("share matches the spend", lambda d: (d["share_negotiated"] - d["negotiated_gross_usd"] / d["total_gross_usd"]).abs() < 1e-9),
+    ),
+)
+
 TABLES: dict[str, Table] = {
     t.name: t
     for t in (
-        NEGOTIATED_DRUGS, MANUAL_MAPPINGS, TARGET_CLASSES_REF,
-        PARTD_DRUG_YEAR, DRUG_TARGET, UNMAPPED,
-        TARGET_SPEND, PRICE_CUTS, CLASS_SUMMARY,
+        NEGOTIATED_DRUGS, MANUAL_MAPPINGS, TARGET_CLASSES_REF, FIRM_LABELERS,
+        PARTD_DRUG_YEAR, PARTD_MFTR_YEAR, DRUG_TARGET, UNMAPPED,
+        TARGET_SPEND, PRICE_CUTS, CLASS_SUMMARY, FIRM_EXPOSURE,
     )
 }
 
