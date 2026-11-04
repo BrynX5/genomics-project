@@ -73,7 +73,7 @@ def test_repo_reference_data_passes():
     assert validate.validate_table(contracts.NEGOTIATED_DRUGS) == []
     nd = validate.load("negotiated_drugs")
     assert len(nd) == 25 and nd["drug_id"].is_unique
-    assert nd["negotiated_price_30d_usd"].notna().sum() == 15
+    assert nd["negotiated_price_30d_usd"].notna().all() and nd["verified"].all()
 
 
 def test_contract_catches_bad_rows(project):
@@ -122,10 +122,12 @@ def test_end_to_end_synthetic(project):
     # equal split preserves the total spend of mapped drugs (latest year)
     total = validate.load("partd_drug_year").query("year == 2024")["gross_spend_usd"].sum()
     assert abs(ts.loc[ts.split_rule == "equal", "gross_spend_usd"].sum() - total) < 1
-    assert len(pc) == 15 and pc["target_class"].notna().all()
+    assert len(pc) == 25 and pc["target_class"].notna().all()
     assert all((project / "figures" / f).exists() for f in
                ("q1_spend_by_target.png", "q1_spend_by_class.png", "q2_price_cut_by_class.png"))
-    errs = "\n".join(validate.gate(2))  # prices unverified, README missing -> must fail
+    pc_path = project / contracts.PRICE_CUTS.path
+    pd.read_csv(pc_path, dtype=str).assign(verified=lambda d: d["verified"].where(d.index > 0, "false")).to_csv(pc_path, index=False)
+    errs = "\n".join(validate.gate(2))  # one price unverified, README missing -> must fail
     assert "unverified prices" in errs and "Findings" in errs
 
 

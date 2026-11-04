@@ -15,14 +15,16 @@ Claude: read this first every session. Tick items as you finish them, and add a 
 ## Day 2: analysis and write-up
 
 - [x] curate-reference: verify the 15 second-cycle prices against the CMS fact sheet
-- [ ] analyze-question: `make analyze`; reconciliation and sensitivity checks logged
-- [ ] analyze-question: draft three findings below
+- [x] analyze-question: `make analyze`; reconciliation and sensitivity checks logged
+- [x] analyze-question: draft three findings below
 - [ ] write-findings: README.md
 - [ ] gate-check: `make gate2` passes, plus the fresh-eyes review
 
 ## Findings draft
 
-(empty)
+1. **Q1.** Factor Xa (F10, via Eliquis and Xarelto) absorbs 26.5% ($27.0B) of the $102.1B gross 2024 Part D spend on the 24 negotiated drugs with a human target (target_spend.csv, equal split; share_of_total 0.264614).
+2. **Q1.** Three targets dominate: F10 26.5%, SGLT2 (SLC5A2, Farxiga + Jardiance) 16.4%, GLP-1R (semaglutide) 14.9%. The next target, DPP-4, has 5.4%. The top three are identical under both split rules (target_spend.csv).
+3. **Q2.** The cut from list to negotiated 30-day price ranged from 37.6% (Imbruvica, BTK kinase) to 84.8% (Janumet, DPP-4 protease). Both BTK-kinase drugs were near the bottom (Imbruvica 37.6%, Calquence 39.6%); all three DPP-4 drugs were near the top (Janumet 84.8%, Tradjenta 84.0%, Januvia 78.6%) (price_cuts.csv). Caveat for the README: classes hold only 1–6 drugs, the two cycles use different list-price years, and the low-list-price primary-care drugs (about $400–$650 list) were cut harder than the high-list-price specialty drugs. The data cannot separate a target-class effect from a list-price-level effect.
 
 ## Blocked
 
@@ -47,3 +49,4 @@ Claude: read this first every session. Tick items as you finish them, and add a 
 - 2026-11-03 - curate-reference: CMS lists Stelara's brand as `Stelara*` (footnote marker), so cms_brand_regex is now `^stelara\*?$`. No other ustekinumab brands appear in the CMS data. Stelara 2024 gross spend $3,378,017,374. All 25 drugs now match 2024 spend, totalling $103,220,714,835 gross. Spend-weighted human-target coverage is 98.88% (xifaxan $1,158,111,409 is the only gap).
 - 2026-11-03 - gate-check: `make gate1` -> `PASS gate 1`. Day 1 done. The fresh-eyes review (gate-check step 4) needs README, figures and data/processed, which arrive on Day 2, so it runs with gate 2. Reminder for Day 2: list and negotiated prices in negotiated_drugs.csv are still empty or unverified.
 - 2026-11-03 - curate-reference (prices): opened both CMS fact sheets (IPAY 2026 Aug 2024; IPAY 2027 Nov 2025; saved under data/raw/factsheets/). All 15 second-cycle prices (from news coverage) matched the fact sheet exactly. Filled the 10 first-cycle drugs, which had no prices. All 25 rows now verified=true with the fact-sheet URL. Check: the discount recomputed from list and negotiated price rounds to the CMS-printed % for all 25. Doubts for the write-up: (1) list prices come from different years (CY2023 WAC for the 2026 cycle, CY2024 WAC for the 2027 cycle), noted per row; (2) the NovoLog price covers the Fiasp/NovoLog family; (3) the semaglutide price covers Ozempic, Rybelsus and Wegovy.
+- 2026-11-03 - analyze-question: `make analyze` -> target_spend.csv 59 rows, price_cuts.csv 25 rows, 3 figures. Reconciliation: equal-split sum $102,062,603,426.69 = first_target sum = independent match_spend total for the 24 mapped drugs (2024); all 25 drugs total $103,220,714,835.29, the gap being xifaxan. Sensitivity (equal vs first_target): BTK ranks 5 -> 7; NR3C1 ranks 8 -> 4 (Breo/Trelegy spend goes all to the glucocorticoid receptor under first_target). Top 3 unchanged. Q2: 25 drugs (both cycles priced); only xifaxan lacks a class, because it has no human target. Figure fixes: Q2 shows xifaxan as 'No human target' instead of 'Unclassified'; the Q2 footnote no longer says 'savings' and now states the list-price years; label overlap and axis clipping fixed; the Q1 class figure footnote gives its source. Tests: two tests hard-coded the scaffold's 15 unverified prices; updated to 25 verified, and the gate-2 'unverified' check is still exercised by marking one row false. Note: the previous commit (price fill) was pushed with those two tests failing. Doubt for write-findings: class-level totals and medians are not in any processed CSV, so README can only quote per-target and per-drug numbers unless a class summary table is added.

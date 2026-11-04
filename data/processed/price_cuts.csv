@@ -1,0 +1,26 @@
+drug_id,brand,cycle,target_class,list_price_30d_usd,negotiated_price_30d_usd,pct_cut,verified
+janumet,Janumet; Janumet XR,2027,Protease,526.0,80.0,0.8479087452471483,True
+tradjenta,Tradjenta,2027,Protease,488.0,78.0,0.8401639344262295,True
+breo-ellipta,Breo Ellipta,2027,Nuclear receptor,397.0,67.0,0.8312342569269522,True
+januvia,Januvia,2026,Protease,527.0,113.0,0.7855787476280836,True
+novolog,Fiasp; NovoLog,2026,Kinase,495.0,119.0,0.7595959595959596,True
+linzess,Linzess,2027,Other enzyme,539.0,136.0,0.7476808905380334,True
+trelegy-ellipta,Trelegy Ellipta,2027,Nuclear receptor,654.0,175.0,0.7324159021406728,True
+semaglutide,Ozempic; Rybelsus; Wegovy,2027,GPCR,959.0,274.0,0.7142857142857143,True
+farxiga,Farxiga,2026,Transporter,556.0,178.5,0.6789568345323741,True
+enbrel,Enbrel,2026,Cytokine or receptor,7106.0,2355.0,0.6685899240078806,True
+stelara,Stelara,2026,Cytokine or receptor,13836.0,4695.0,0.6606678230702515,True
+jardiance,Jardiance,2026,Transporter,573.0,197.0,0.6561954624781849,True
+otezla,Otezla,2027,Other enzyme,4722.0,1650.0,0.650571791613723,True
+xifaxan,Xifaxan,2027,,2696.0,1000.0,0.629080118694362,True
+xarelto,Xarelto,2026,Protease,517.0,197.0,0.6189555125725339,True
+pomalyst,Pomalyst,2027,Other,21744.0,8650.0,0.6021891096394407,True
+eliquis,Eliquis,2026,Protease,521.0,231.0,0.5566218809980806,True
+entresto,Entresto,2026,Protease,628.0,295.0,0.5302547770700636,True
+ibrance,Ibrance,2027,Other,15741.0,7871.0,0.49996823581729244,True
+ofev,Ofev,2027,Kinase,12622.0,6350.0,0.496910156868959,True
+xtandi,Xtandi,2027,Nuclear receptor,13480.0,7004.0,0.48041543026706235,True
+vraylar,Vraylar,2027,GPCR,1376.0,770.0,0.44040697674418605,True
+calquence,Calquence,2027,Kinase,14228.0,8600.0,0.395558054540343,True
+austedo,Austedo; Austedo XR,2027,Transporter,6623.0,4093.0,0.3820021138456893,True
+imbruvica,Imbruvica,2026,Kinase,14934.0,9319.0,0.3759876791214678,True

@@ -111,28 +111,30 @@ def figures(ts: pd.DataFrame, pc: pd.DataFrame) -> None:
     ax.barh(by.index, by / 1e9, color="#3b6ea8")
     ax.set_xlabel(f"Gross Part D spend, {year} ($ billions)")
     ax.set_title("Spend on the negotiated drugs by target class", loc="left")
-    fig.text(0.01, 0.01, "Gross cost before rebates. Equal split across targets.", fontsize=7.5, color="#555")
+    fig.text(0.01, 0.01, "Gross cost before rebates. Equal split across targets. Source: CMS, ChEMBL.",
+             fontsize=7.5, color="#555")
     fig.tight_layout(rect=(0, 0.03, 1, 1))
     fig.savefig(FIG / "q1_spend_by_class.png", dpi=200)
     plt.close(fig)
 
     # Q2: price cut by class, one dot per drug
-    d = pc.assign(target_class=pc["target_class"].fillna("Unclassified"))
+    d = pc.assign(target_class=pc["target_class"].fillna("No human target"))
     order = d.groupby("target_class")["pct_cut"].median().sort_values().index.tolist()
     fig, ax = plt.subplots(figsize=(7, 0.6 * len(order) + 1.6))
     for i, cls in enumerate(order):
         sub = d[d["target_class"] == cls].sort_values("pct_cut")
         ax.scatter(sub["pct_cut"] * 100, [i] * len(sub), color="#3b6ea8", zorder=3)
-        for j, r in enumerate(sub.itertuples()):  # alternate above/below so neighbours don't collide
-            ax.annotate(r.brand.split(";")[0], (r.pct_cut * 100, i), xytext=(0, 7 if j % 2 == 0 else -13),
+        for j, r in enumerate(sub.itertuples()):  # cycle four label heights so close neighbours don't collide
+            ax.annotate(r.brand.split(";")[0], (r.pct_cut * 100, i), xytext=(0, (7, -13, 15, -21)[j % 4]),
                         textcoords="offset points", ha="center", fontsize=7, color="#333")
     ax.set_yticks(range(len(order)), order)
+    ax.set_ylim(-0.7, len(order) - 0.3)  # room for labels above the top row and below the bottom row
     ax.set_xlim(0, 100)
     ax.set_xlabel("Cut from list price to negotiated price, 30-day supply (%)")
     ax.set_title("Negotiated price cuts by primary target class", loc="left")
-    fig.text(0.01, 0.01, "List vs negotiated price, not net of rebates, so cuts overstate real savings. Source: CMS.",
-             fontsize=7.5, color="#555")
-    fig.tight_layout(rect=(0, 0.04, 1, 1))
+    fig.text(0.01, 0.01, "List price (WAC) vs negotiated price, both before rebates. List prices are CY2023 for the 2026 cycle\n"
+             "and CY2024 for the 2027 cycle. Source: CMS negotiated-price fact sheets.", fontsize=7.5, color="#555")
+    fig.tight_layout(rect=(0, 0.05, 1, 1))
     fig.savefig(FIG / "q2_price_cut_by_class.png", dpi=200)
     plt.close(fig)
 

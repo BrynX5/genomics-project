@@ -1,0 +1,60 @@
+split_rule,spend_year,uniprot,gene_symbol,target_name,target_class,gross_spend_usd,share_of_total,n_drugs,drugs
+equal,2024,P00742,F10,Coagulation factor X,Protease,27007161064.7,0.2646136798195515,2,eliquis;xarelto
+equal,2024,P31639,SLC5A2,Sodium/glucose cotransporter 2,Transporter,16726546384.4,0.16388516285903312,2,farxiga;jardiance
+equal,2024,P43220,GLP1R,Glucagon-like peptide 1 receptor,GPCR,15161661664.4,0.14855256632063468,1,semaglutide
+equal,2024,P27487,DPP4,Dipeptidyl peptidase 4,Protease,5469027197.3,0.05358502540284816,3,janumet;januvia;tradjenta
+equal,2024,Q06187,BTK,Tyrosine-protein kinase BTK,Kinase,3968791082.7299995,0.03888584995365831,2,calquence;imbruvica
+equal,2024,P10275,AR,Androgen receptor,Nuclear receptor,3400769228.6,0.03332042407719612,1,xtandi
+equal,2024,P01375,TNF,Tumor necrosis factor,Cytokine or receptor,3225567875.91,0.03160381733968678,1,enbrel
+equal,2024,P04150,NR3C1,Glucocorticoid receptor,Nuclear receptor,2445064912.5666666,0.023956521100531397,2,breo-ellipta;trelegy-ellipta
+equal,2024,P07550,ADRB2,Beta-2 adrenergic receptor,GPCR,2445064912.5666666,0.023956521100531397,2,breo-ellipta;trelegy-ellipta
+equal,2024,P08473,MME,Neprilysin,Protease,2010233201.95,0.019696079998526787,1,entresto
+equal,2024,P30556,AGTR1,Type-1 angiotensin II receptor,GPCR,2010233201.95,0.019696079998526787,1,entresto
+equal,2024,P25092,GUCY2C,Guanylyl cyclase C,Other enzyme,1981958629.2,0.019419048335599345,1,linzess
+equal,2024,P20309,CHRM3,Muscarinic acetylcholine receptor M3,GPCR,1764800592.2666667,0.017291353865319496,1,trelegy-ellipta
+equal,2024,Q05940,SLC18A2,Synaptic vesicular amine transporter,Transporter,1674822920.09,0.016409760910057518,1,austedo
+equal,2024,P29459,IL12A,Interleukin-12,Cytokine or receptor,1126005791.3666666,0.011032501166555676,1,stelara
+equal,2024,P29460,IL12B,Interleukin-12,Cytokine or receptor,1126005791.3666666,0.011032501166555676,1,stelara
+equal,2024,Q9NPF7,IL23A,Interleukin-23,Cytokine or receptor,1126005791.3666666,0.011032501166555676,1,stelara
+equal,2024,P11802,CDK4,Cyclin-dependent kinase 4/cyclin D1,Kinase,678340687.0999999,0.006646319654066454,1,ibrance
+equal,2024,P24385,CCND1,CDK6/cyclin D1,Other,678340687.0999999,0.006646319654066454,1,ibrance
+equal,2024,Q00534,CDK6,CDK6/cyclin D1,Kinase,678340687.0999999,0.006646319654066454,1,ibrance
+equal,2024,P14416,DRD2,D(2) dopamine receptor,GPCR,567986655.0,0.005565080998624302,1,vraylar
+equal,2024,P35462,DRD3,D(3) dopamine receptor,GPCR,567986655.0,0.005565080998624302,1,vraylar
+equal,2024,P62877,RBX1,CRL4(CRBN) E3 ubiquitin ligase,Other enzyme,537557953.65,0.005266943381824663,1,pomalyst
+equal,2024,Q13619,CUL4A,CRL4(CRBN) E3 ubiquitin ligase,Other,537557953.65,0.005266943381824663,1,pomalyst
+equal,2024,Q16531,DDB1,CRL4(CRBN) E3 ubiquitin ligase,Other,537557953.65,0.005266943381824663,1,pomalyst
+equal,2024,Q96SW2,CRBN,CRL4(CRBN) E3 ubiquitin ligase,Other,537557953.65,0.005266943381824663,1,pomalyst
+equal,2024,P43304,GPD2,"Glycerol-3-phosphate dehydrogenase, mitochondrial",Other enzyme,533574089.1,0.005227909843425248,1,janumet
+equal,2024,P06213,INSR,Insulin receptor,Kinase,406653179.16,0.003984350442834753,1,novolog
+equal,2024,P27815,PDE4A,Phosphodiesterase 4,Other enzyme,261257437.725,0.002559776342690075,1,otezla
+equal,2024,Q07343,PDE4B,Phosphodiesterase 4,Other enzyme,261257437.725,0.002559776342690075,1,otezla
+equal,2024,Q08493,PDE4C,Phosphodiesterase 4,Other enzyme,261257437.725,0.002559776342690075,1,otezla
+equal,2024,Q08499,PDE4D,Phosphodiesterase 4,Other enzyme,261257437.725,0.002559776342690075,1,otezla
+equal,2024,P09619,PDGFRB,Platelet-derived growth factor receptor,Kinase,231822108.76666665,0.002271371697207204,1,ofev
+equal,2024,P11362,FGFR1,Fibroblast growth factor receptor,Kinase,231822108.76666665,0.002271371697207204,1,ofev
+equal,2024,P16234,PDGFRA,Platelet-derived growth factor receptor,Kinase,231822108.76666665,0.002271371697207204,1,ofev
+equal,2024,P17948,FLT1,Vascular endothelial growth factor receptor,Kinase,231822108.76666665,0.002271371697207204,1,ofev
+equal,2024,P21802,FGFR2,Fibroblast growth factor receptor,Kinase,231822108.76666665,0.002271371697207204,1,ofev
+equal,2024,P22455,FGFR4,Fibroblast growth factor receptor,Kinase,231822108.76666665,0.002271371697207204,1,ofev
+equal,2024,P22607,FGFR3,Fibroblast growth factor receptor,Kinase,231822108.76666665,0.002271371697207204,1,ofev
+equal,2024,P35916,FLT4,Vascular endothelial growth factor receptor,Kinase,231822108.76666665,0.002271371697207204,1,ofev
+equal,2024,P35968,KDR,Vascular endothelial growth factor receptor,Kinase,231822108.76666665,0.002271371697207204,1,ofev
+first_target,2024,P00742,F10,Coagulation factor X,Protease,27007161064.7,0.2646136798195515,2,eliquis;xarelto
+first_target,2024,P31639,SLC5A2,Sodium/glucose cotransporter 2,Transporter,16726546384.4,0.16388516285903312,2,farxiga;jardiance
+first_target,2024,P43220,GLP1R,Glucagon-like peptide 1 receptor,GPCR,15161661664.4,0.14855256632063468,1,semaglutide
+first_target,2024,P04150,NR3C1,Glucocorticoid receptor,Nuclear receptor,6654930417.4,0.06520439606638229,2,breo-ellipta;trelegy-ellipta
+first_target,2024,P27487,DPP4,Dipeptidyl peptidase 4,Protease,6002601286.4,0.0588129352462734,3,janumet;januvia;tradjenta
+first_target,2024,P08473,MME,Neprilysin,Protease,4020466403.9,0.039392159997053575,1,entresto
+first_target,2024,Q06187,BTK,Tyrosine-protein kinase BTK,Kinase,3968791082.7299995,0.03888584995365831,2,calquence;imbruvica
+first_target,2024,P10275,AR,Androgen receptor,Nuclear receptor,3400769228.6,0.03332042407719612,1,xtandi
+first_target,2024,P29460,IL12B,Interleukin-12,Cytokine or receptor,3378017374.1,0.03309750349966703,1,stelara
+first_target,2024,P01375,TNF,Tumor necrosis factor,Cytokine or receptor,3225567875.91,0.03160381733968678,1,enbrel
+first_target,2024,Q96SW2,CRBN,CRL4(CRBN) E3 ubiquitin ligase,Other,2150231814.6,0.02106777352729865,1,pomalyst
+first_target,2024,P09619,PDGFRB,Platelet-derived growth factor receptor,Kinase,2086398978.9,0.02044234527486484,1,ofev
+first_target,2024,P24385,CCND1,CDK6/cyclin D1,Other,2035022061.3,0.019938958962199365,1,ibrance
+first_target,2024,P25092,GUCY2C,Guanylyl cyclase C,Other enzyme,1981958629.2,0.019419048335599345,1,linzess
+first_target,2024,Q05940,SLC18A2,Synaptic vesicular amine transporter,Transporter,1674822920.09,0.016409760910057518,1,austedo
+first_target,2024,P35462,DRD3,D(3) dopamine receptor,GPCR,1135973310.0,0.011130161997248604,1,vraylar
+first_target,2024,P27815,PDE4A,Phosphodiesterase 4,Other enzyme,1045029750.9,0.0102391053707603,1,otezla
+first_target,2024,P06213,INSR,Insulin receptor,Kinase,406653179.16,0.003984350442834753,1,novolog
