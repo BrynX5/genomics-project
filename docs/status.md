@@ -14,7 +14,7 @@ Claude: read this first every session. Tick items as you finish them, and add a 
 
 ## Day 2: analysis and write-up
 
-- [ ] curate-reference: verify the 15 second-cycle prices against the CMS fact sheet
+- [x] curate-reference: verify the 15 second-cycle prices against the CMS fact sheet
 - [ ] analyze-question: `make analyze`; reconciliation and sensitivity checks logged
 - [ ] analyze-question: draft three findings below
 - [ ] write-findings: README.md
@@ -46,3 +46,4 @@ Claude: read this first every session. Tick items as you finish them, and add a 
 - 2026-11-03 - map-drug-targets (classes): 41/41 human targets classed from the ChEMBL protein_classification tree (source_url = ChEMBL target page). IL12A, IL12B, IL23A and TNF are classed from UniProt 'Cytokine' keywords, because IL12A and IL23A have no ChEMBL single-protein target. Counts: Kinase 13, Other enzyme 7, GPCR 6, Cytokine or receptor 4, Other 4, Protease 3, Nuclear receptor 2, Transporter 2. Doubts: the 'Other' class is CCND1 (cyclin, the regulatory partner of CDK4/6) plus CRBN/DDB1/CUL4A (ChEMBL 'Unclassified'), yet RBX1 from the same CRL4 ligase is 'Other enzyme' per ChEMBL; GUCY2C (receptor guanylate cyclase) is 'Other enzyme'. gate1 now fails only on stelara having no 2024 CMS spend.
 - 2026-11-03 - curate-reference: CMS lists Stelara's brand as `Stelara*` (footnote marker), so cms_brand_regex is now `^stelara\*?$`. No other ustekinumab brands appear in the CMS data. Stelara 2024 gross spend $3,378,017,374. All 25 drugs now match 2024 spend, totalling $103,220,714,835 gross. Spend-weighted human-target coverage is 98.88% (xifaxan $1,158,111,409 is the only gap).
 - 2026-11-03 - gate-check: `make gate1` -> `PASS gate 1`. Day 1 done. The fresh-eyes review (gate-check step 4) needs README, figures and data/processed, which arrive on Day 2, so it runs with gate 2. Reminder for Day 2: list and negotiated prices in negotiated_drugs.csv are still empty or unverified.
+- 2026-11-03 - curate-reference (prices): opened both CMS fact sheets (IPAY 2026 Aug 2024; IPAY 2027 Nov 2025; saved under data/raw/factsheets/). All 15 second-cycle prices (from news coverage) matched the fact sheet exactly. Filled the 10 first-cycle drugs, which had no prices. All 25 rows now verified=true with the fact-sheet URL. Check: the discount recomputed from list and negotiated price rounds to the CMS-printed % for all 25. Doubts for the write-up: (1) list prices come from different years (CY2023 WAC for the 2026 cycle, CY2024 WAC for the 2027 cycle), noted per row; (2) the NovoLog price covers the Fiasp/NovoLog family; (3) the semaglutide price covers Ozempic, Rybelsus and Wegovy.
