@@ -1,0 +1,48 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(make:*)",
+      "Bash(python -m rxgenome:*)",
+      "Bash(.venv/bin/python -m rxgenome:*)",
+      "Bash(.venv/bin/pytest:*)",
+      "Bash(pytest:*)",
+      "Bash(grep:*)",
+      "Bash(git status)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "WebFetch(domain:www.cms.gov)",
+      "WebFetch(domain:data.cms.gov)",
+      "WebFetch(domain:catalog.data.gov)",
+      "WebFetch(domain:www.ebi.ac.uk)",
+      "WebFetch(domain:rest.uniprot.org)",
+      "WebFetch(domain:www.uniprot.org)",
+      "WebFetch(domain:rxnav.nlm.nih.gov)"
+    ],
+    "ask": [
+      "Bash(git push:*)",
+      "Edit(./src/rxgenome/contracts.py)"
+    ],
+    "deny": [
+      "Edit(./data/raw/**)",
+      "Write(./data/raw/**)",
+      "Bash(rm -rf:*)",
+      "Bash(git push --force:*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/validate_on_write.py",
+            "timeout": 60
+          }
+        ]
+      }
+    ]
+  }
+}

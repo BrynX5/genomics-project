@@ -1,0 +1,6 @@
+pandas>=2.2
+requests>=2.31
+requests-cache>=1.2
+matplotlib>=3.8
+pytest>=8
+jupyter>=1.0
