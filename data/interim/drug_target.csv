@@ -1,0 +1,105 @@
+drug_id,ingredient,rxcui,chembl_parent,mechanism_of_action,action_type,target_chembl_id,target_name,target_type,organism,uniprot,target_order,mapping_source
+austedo,deutetrabenazine,1876905,CHEMBL117785,Synaptic vesicular amine transporter inhibitor,INHIBITOR,CHEMBL1893,Synaptic vesicular amine transporter,SINGLE PROTEIN,Homo sapiens,Q05940,1,auto
+breo-ellipta,fluticasone furoate,705022,CHEMBL1676,Glucocorticoid receptor agonist,AGONIST,CHEMBL2034,Glucocorticoid receptor,SINGLE PROTEIN,Homo sapiens,P04150,1,auto
+breo-ellipta,vilanterol,1424884,CHEMBL1198857,Beta-2 adrenergic receptor agonist,AGONIST,CHEMBL210,Beta-2 adrenergic receptor,SINGLE PROTEIN,Homo sapiens,P07550,2,auto
+calquence,acalabrutinib,1986808,CHEMBL3707348,Tyrosine-protein kinase BTK inhibitor,INHIBITOR,CHEMBL5251,Tyrosine-protein kinase BTK,SINGLE PROTEIN,Homo sapiens,Q06187,1,auto
+eliquis,apixaban,1364430,CHEMBL231779,Coagulation factor X inhibitor,INHIBITOR,CHEMBL244,Coagulation factor X,SINGLE PROTEIN,Homo sapiens,P00742,1,auto
+enbrel,etanercept,214555,CHEMBL1201572,TNF-alpha inhibitor,INHIBITOR,CHEMBL1825,Tumor necrosis factor,SINGLE PROTEIN,Homo sapiens,P01375,1,auto
+entresto,sacubitril,1656328,CHEMBL3137301,Neprilysin inhibitor,INHIBITOR,CHEMBL1944,Neprilysin,SINGLE PROTEIN,Homo sapiens,P08473,1,auto
+entresto,valsartan,69749,CHEMBL1069,Type-1 angiotensin II receptor antagonist,ANTAGONIST,CHEMBL227,Type-1 angiotensin II receptor,SINGLE PROTEIN,Homo sapiens,P30556,2,auto
+farxiga,dapagliflozin,1488564,CHEMBL429910,Sodium/glucose cotransporter 2 inhibitor,INHIBITOR,CHEMBL3884,Sodium/glucose cotransporter 2,SINGLE PROTEIN,Homo sapiens,P31639,1,auto
+ibrance,palbociclib,1601374,CHEMBL189963,CDK6/cyclin D1 inhibitor,INHIBITOR,CHEMBL2111455,CDK6/cyclin D1,PROTEIN COMPLEX,Homo sapiens,P24385,1,auto
+ibrance,palbociclib,1601374,CHEMBL189963,CDK6/cyclin D1 inhibitor,INHIBITOR,CHEMBL2111455,CDK6/cyclin D1,PROTEIN COMPLEX,Homo sapiens,Q00534,2,auto
+ibrance,palbociclib,1601374,CHEMBL189963,Cyclin-dependent kinase 4/cyclin D1 inhibitor,INHIBITOR,CHEMBL1907601,Cyclin-dependent kinase 4/cyclin D1,PROTEIN COMPLEX,Homo sapiens,P11802,3,auto
+ibrance,palbociclib,1601374,CHEMBL189963,Cyclin-dependent kinase 4/cyclin D1 inhibitor,INHIBITOR,CHEMBL1907601,Cyclin-dependent kinase 4/cyclin D1,PROTEIN COMPLEX,Homo sapiens,P24385,4,auto
+imbruvica,ibrutinib,1442981,CHEMBL1873475,Tyrosine-protein kinase BTK inhibitor,INHIBITOR,CHEMBL5251,Tyrosine-protein kinase BTK,SINGLE PROTEIN,Homo sapiens,Q06187,1,auto
+janumet,sitagliptin,593411,CHEMBL1422,Dipeptidyl peptidase IV inhibitor,INHIBITOR,CHEMBL284,Dipeptidyl peptidase 4,SINGLE PROTEIN,Homo sapiens,P27487,1,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,P03923,2,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,O95299,3,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,O00217,4,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,P03901,5,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,P56556,6,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,P03886,7,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,O95139,8,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,O00483,9,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,Q86Y39,10,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,P17568,11,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,P03891,12,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,O75306,13,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,P03915,14,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,P51970,15,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,O43674,16,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,P03905,17,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,P03897,18,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,O14561,19,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,O15239,20,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,O43181,21,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,O43676,22,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,O43677,23,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,O43678,24,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,O43920,25,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,O75251,26,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,O75380,27,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,O75438,28,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,O75489,29,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,O95167,30,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,O95168,31,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,O95169,32,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,O95178,33,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,O95182,34,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,O95298,35,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,O96000,36,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,P19404,37,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,P28331,38,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,P49821,39,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,P56181,40,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,Q16718,41,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,Q16795,42,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,Q8N183,43,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,Q9BU61,44,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,Q9NRX3,45,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,Q9NX14,46,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,Q9P032,47,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,Q9P0J0,48,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,Q9UI09,49,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,Q9Y375,50,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial complex I (NADH dehydrogenase) inhibitor,INHIBITOR,CHEMBL2363065,Mitochondrial complex I (NADH dehydrogenase),PROTEIN COMPLEX,Homo sapiens,Q9Y6M9,51,auto
+janumet,metformin,6809,CHEMBL1431,Mitochondrial glycerol-3-phosphate dehydrogenase inhibitor,INHIBITOR,CHEMBL3391681,"Glycerol-3-phosphate dehydrogenase, mitochondrial",SINGLE PROTEIN,Homo sapiens,P43304,52,auto
+januvia,sitagliptin,593411,CHEMBL1422,Dipeptidyl peptidase IV inhibitor,INHIBITOR,CHEMBL284,Dipeptidyl peptidase 4,SINGLE PROTEIN,Homo sapiens,P27487,1,auto
+jardiance,empagliflozin,1545653,CHEMBL2107830,Sodium/glucose cotransporter 2 inhibitor,INHIBITOR,CHEMBL3884,Sodium/glucose cotransporter 2,SINGLE PROTEIN,Homo sapiens,P31639,1,auto
+linzess,linaclotide,1307404,CHEMBL3301675,Heat-stable enterotoxin receptor agonist,AGONIST,CHEMBL1795197,Guanylyl cyclase C,SINGLE PROTEIN,Homo sapiens,P25092,1,auto
+novolog,insulin aspart,51428,CHEMBL1201496,Insulin receptor agonist,AGONIST,CHEMBL1981,Insulin receptor,SINGLE PROTEIN,Homo sapiens,P06213,1,auto
+ofev,nintedanib,1592737,CHEMBL502835,Platelet-derived growth factor receptor inhibitor,INHIBITOR,CHEMBL2095189,Platelet-derived growth factor receptor,PROTEIN COMPLEX,Homo sapiens,P09619,1,auto
+ofev,nintedanib,1592737,CHEMBL502835,Platelet-derived growth factor receptor inhibitor,INHIBITOR,CHEMBL2095189,Platelet-derived growth factor receptor,PROTEIN COMPLEX,Homo sapiens,P16234,2,auto
+ofev,nintedanib,1592737,CHEMBL502835,Vascular endothelial growth factor receptor inhibitor,INHIBITOR,CHEMBL2095227,Vascular endothelial growth factor receptor,PROTEIN FAMILY,Homo sapiens,P17948,3,auto
+ofev,nintedanib,1592737,CHEMBL502835,Vascular endothelial growth factor receptor inhibitor,INHIBITOR,CHEMBL2095227,Vascular endothelial growth factor receptor,PROTEIN FAMILY,Homo sapiens,P35916,4,auto
+ofev,nintedanib,1592737,CHEMBL502835,Vascular endothelial growth factor receptor inhibitor,INHIBITOR,CHEMBL2095227,Vascular endothelial growth factor receptor,PROTEIN FAMILY,Homo sapiens,P35968,5,auto
+ofev,nintedanib,1592737,CHEMBL502835,Fibroblast growth factor receptor inhibitor,INHIBITOR,CHEMBL2095217,Fibroblast growth factor receptor,PROTEIN FAMILY,Homo sapiens,P22607,6,auto
+ofev,nintedanib,1592737,CHEMBL502835,Fibroblast growth factor receptor inhibitor,INHIBITOR,CHEMBL2095217,Fibroblast growth factor receptor,PROTEIN FAMILY,Homo sapiens,P11362,7,auto
+ofev,nintedanib,1592737,CHEMBL502835,Fibroblast growth factor receptor inhibitor,INHIBITOR,CHEMBL2095217,Fibroblast growth factor receptor,PROTEIN FAMILY,Homo sapiens,P22455,8,auto
+ofev,nintedanib,1592737,CHEMBL502835,Fibroblast growth factor receptor inhibitor,INHIBITOR,CHEMBL2095217,Fibroblast growth factor receptor,PROTEIN FAMILY,Homo sapiens,P21802,9,auto
+otezla,apremilast,1492727,CHEMBL514800,Phosphodiesterase 4 inhibitor,INHIBITOR,CHEMBL2093863,Phosphodiesterase 4,PROTEIN FAMILY,Homo sapiens,P27815,1,auto
+otezla,apremilast,1492727,CHEMBL514800,Phosphodiesterase 4 inhibitor,INHIBITOR,CHEMBL2093863,Phosphodiesterase 4,PROTEIN FAMILY,Homo sapiens,Q08499,2,auto
+otezla,apremilast,1492727,CHEMBL514800,Phosphodiesterase 4 inhibitor,INHIBITOR,CHEMBL2093863,Phosphodiesterase 4,PROTEIN FAMILY,Homo sapiens,Q07343,3,auto
+otezla,apremilast,1492727,CHEMBL514800,Phosphodiesterase 4 inhibitor,INHIBITOR,CHEMBL2093863,Phosphodiesterase 4,PROTEIN FAMILY,Homo sapiens,Q08493,4,auto
+pomalyst,pomalidomide,1369713,CHEMBL43452,CRL4(CRBN) E3 ubiquitin ligase inhibitor,INHIBITOR,CHEMBL3833061,CRL4(CRBN) E3 ubiquitin ligase,PROTEIN COMPLEX,Homo sapiens,Q96SW2,1,auto
+pomalyst,pomalidomide,1369713,CHEMBL43452,CRL4(CRBN) E3 ubiquitin ligase inhibitor,INHIBITOR,CHEMBL3833061,CRL4(CRBN) E3 ubiquitin ligase,PROTEIN COMPLEX,Homo sapiens,Q16531,2,auto
+pomalyst,pomalidomide,1369713,CHEMBL43452,CRL4(CRBN) E3 ubiquitin ligase inhibitor,INHIBITOR,CHEMBL3833061,CRL4(CRBN) E3 ubiquitin ligase,PROTEIN COMPLEX,Homo sapiens,Q13619,3,auto
+pomalyst,pomalidomide,1369713,CHEMBL43452,CRL4(CRBN) E3 ubiquitin ligase inhibitor,INHIBITOR,CHEMBL3833061,CRL4(CRBN) E3 ubiquitin ligase,PROTEIN COMPLEX,Homo sapiens,P62877,4,auto
+semaglutide,semaglutide,1991302,CHEMBL2108724,Glucagon-like peptide 1 receptor agonist,AGONIST,CHEMBL1784,Glucagon-like peptide 1 receptor,SINGLE PROTEIN,Homo sapiens,P43220,1,auto
+stelara,ustekinumab,847083,CHEMBL1201835,Interleukin-12 inhibitor,INHIBITOR,CHEMBL2364153,Interleukin-12,PROTEIN COMPLEX,Homo sapiens,P29460,1,auto
+stelara,ustekinumab,847083,CHEMBL1201835,Interleukin-12 inhibitor,INHIBITOR,CHEMBL2364153,Interleukin-12,PROTEIN COMPLEX,Homo sapiens,P29459,2,auto
+stelara,ustekinumab,847083,CHEMBL1201835,Interleukin-23 inhibitor,INHIBITOR,CHEMBL2364154,Interleukin-23,PROTEIN COMPLEX,Homo sapiens,P29460,3,auto
+stelara,ustekinumab,847083,CHEMBL1201835,Interleukin-23 inhibitor,INHIBITOR,CHEMBL2364154,Interleukin-23,PROTEIN COMPLEX,Homo sapiens,Q9NPF7,4,auto
+tradjenta,linagliptin,1100699,CHEMBL237500,Dipeptidyl peptidase IV inhibitor,INHIBITOR,CHEMBL284,Dipeptidyl peptidase 4,SINGLE PROTEIN,Homo sapiens,P27487,1,auto
+trelegy-ellipta,fluticasone furoate,705022,CHEMBL1676,Glucocorticoid receptor agonist,AGONIST,CHEMBL2034,Glucocorticoid receptor,SINGLE PROTEIN,Homo sapiens,P04150,1,auto
+trelegy-ellipta,umeclidinium,1487514,CHEMBL1187833,Muscarinic acetylcholine receptor M3 antagonist,ANTAGONIST,CHEMBL245,Muscarinic acetylcholine receptor M3,SINGLE PROTEIN,Homo sapiens,P20309,2,auto
+trelegy-ellipta,vilanterol,1424884,CHEMBL1198857,Beta-2 adrenergic receptor agonist,AGONIST,CHEMBL210,Beta-2 adrenergic receptor,SINGLE PROTEIN,Homo sapiens,P07550,3,auto
+vraylar,cariprazine,1667655,CHEMBL2028019,Dopamine D3 receptor modulator,MODULATOR,CHEMBL234,D(3) dopamine receptor,SINGLE PROTEIN,Homo sapiens,P35462,1,auto
+vraylar,cariprazine,1667655,CHEMBL2028019,Dopamine D2 receptor modulator,MODULATOR,CHEMBL217,D(2) dopamine receptor,SINGLE PROTEIN,Homo sapiens,P14416,2,auto
+xarelto,rivaroxaban,1114195,CHEMBL198362,Coagulation factor X inhibitor,INHIBITOR,CHEMBL244,Coagulation factor X,SINGLE PROTEIN,Homo sapiens,P00742,1,auto
+xifaxan,rifaximin,35619,CHEMBL1617,Bacterial DNA-directed RNA polymerase inhibitor,INHIBITOR,CHEMBL2364672,Bacterial DNA-directed RNA polymerase,PROTEIN COMPLEX,Bacteria,P0A8V2,1,auto
+xifaxan,rifaximin,35619,CHEMBL1617,Bacterial DNA-directed RNA polymerase inhibitor,INHIBITOR,CHEMBL2364672,Bacterial DNA-directed RNA polymerase,PROTEIN COMPLEX,Bacteria,P0A7Z4,2,auto
+xifaxan,rifaximin,35619,CHEMBL1617,Bacterial DNA-directed RNA polymerase inhibitor,INHIBITOR,CHEMBL2364672,Bacterial DNA-directed RNA polymerase,PROTEIN COMPLEX,Bacteria,P0A8T7,3,auto
+xifaxan,rifaximin,35619,CHEMBL1617,Bacterial DNA-directed RNA polymerase inhibitor,INHIBITOR,CHEMBL2364672,Bacterial DNA-directed RNA polymerase,PROTEIN COMPLEX,Bacteria,P0A800,4,auto
+xtandi,enzalutamide,1307298,CHEMBL1082407,Androgen Receptor antagonist,ANTAGONIST,CHEMBL1871,Androgen receptor,SINGLE PROTEIN,Homo sapiens,P10275,1,auto
