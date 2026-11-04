@@ -4,7 +4,7 @@ Claude: read this first every session. Tick items as you finish them, and add a 
 
 ## Day 1: data and crosswalk
 
-- [ ] Run `make setup`, then `make validate` (reference tables pass)
+- [x] Run `make setup`, then `make validate` (reference tables pass)
 - [ ] ingest-cms: build `partd_drug_year.csv`; log the year range and latest-year gross total
 - [ ] map-drug-targets: run `make map`; log coverage
 - [ ] map-drug-targets: hand-map failures in `manual_mappings.csv`
@@ -39,3 +39,4 @@ Claude: read this first every session. Tick items as you finish them, and add a 
 ## Log
 
 - 2026-11-02 - Scaffold created: contracts, skills, hook, reference data (25 drugs; 15 second-cycle prices from news coverage, unverified)
+- 2026-11-03 - Setup: git repo initialised, `make setup` built .venv (Python 3.14), `make validate` PASS all tables. Next: ingest-cms.
