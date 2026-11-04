@@ -52,7 +52,7 @@ first_target,2024,P29460,IL12B,Interleukin-12,Cytokine or receptor,3378017374.1,
 first_target,2024,P01375,TNF,Tumor necrosis factor,Cytokine or receptor,3225567875.91,0.03160381733968678,1,enbrel
 first_target,2024,Q96SW2,CRBN,CRL4(CRBN) E3 ubiquitin ligase,Other,2150231814.6,0.02106777352729865,1,pomalyst
 first_target,2024,P09619,PDGFRB,Platelet-derived growth factor receptor,Kinase,2086398978.9,0.02044234527486484,1,ofev
-first_target,2024,P24385,CCND1,CDK6/cyclin D1,Other,2035022061.3,0.019938958962199365,1,ibrance
+first_target,2024,P11802,CDK4,Cyclin-dependent kinase 4/cyclin D1,Kinase,2035022061.3,0.019938958962199365,1,ibrance
 first_target,2024,P25092,GUCY2C,Guanylyl cyclase C,Other enzyme,1981958629.2,0.019419048335599345,1,linzess
 first_target,2024,Q05940,SLC18A2,Synaptic vesicular amine transporter,Transporter,1674822920.09,0.016409760910057518,1,austedo
 first_target,2024,P35462,DRD3,D(3) dopamine receptor,GPCR,1135973310.0,0.011130161997248604,1,vraylar

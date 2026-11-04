@@ -124,7 +124,7 @@ def figures(ts: pd.DataFrame, pc: pd.DataFrame) -> None:
     fig, ax = plt.subplots(figsize=(7, 4))
     ax.barh(by.index, by / 1e9, color="#3b6ea8")
     ax.set_xlabel(f"Gross Part D spend, {year} ($ billions)")
-    ax.set_title("Spend on the negotiated drugs by target class", loc="left")
+    ax.set_title(f"Gross spend on the negotiated drugs by target class, {year}", loc="left")
     fig.text(0.01, 0.01, "Gross cost before rebates. Equal split across targets. Source: CMS, ChEMBL.",
              fontsize=7.5, color="#555")
     fig.tight_layout(rect=(0, 0.03, 1, 1))
@@ -138,6 +138,7 @@ def figures(ts: pd.DataFrame, pc: pd.DataFrame) -> None:
     for i, cls in enumerate(order):
         sub = d[d["target_class"] == cls].sort_values("pct_cut")
         ax.scatter(sub["pct_cut"] * 100, [i] * len(sub), color="#3b6ea8", zorder=3)
+        ax.scatter(sub["pct_cut"].median() * 100, i, marker="|", s=400, color="#c0392b", zorder=2)
         for j, r in enumerate(sub.itertuples()):  # cycle four label heights so close neighbours don't collide
             ax.annotate(r.brand.split(";")[0], (r.pct_cut * 100, i), xytext=(0, (7, -13, 15, -21)[j % 4]),
                         textcoords="offset points", ha="center", fontsize=7, color="#333")
@@ -146,8 +147,8 @@ def figures(ts: pd.DataFrame, pc: pd.DataFrame) -> None:
     ax.set_xlim(0, 100)
     ax.set_xlabel("Cut from list price to negotiated price, 30-day supply (%)")
     ax.set_title("Negotiated price cuts by primary target class", loc="left")
-    fig.text(0.01, 0.01, "List price (WAC) vs negotiated price, both before rebates. List prices are CY2023 for the 2026 cycle\n"
-             "and CY2024 for the 2027 cycle. Source: CMS negotiated-price fact sheets.", fontsize=7.5, color="#555")
+    fig.text(0.01, 0.01, "Red bar = class median. List price (WAC) vs negotiated price, both before rebates. List prices are CY2023\n"
+             "for the 2026 cycle and CY2024 for the 2027 cycle. Source: CMS negotiated-price fact sheets.", fontsize=7.5, color="#555")
     fig.tight_layout(rect=(0, 0.05, 1, 1))
     fig.savefig(FIG / "q2_price_cut_by_class.png", dpi=200)
     plt.close(fig)

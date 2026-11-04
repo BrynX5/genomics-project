@@ -8,9 +8,9 @@ enbrel,etanercept,214555,CHEMBL1201572,TNF-alpha inhibitor,INHIBITOR,CHEMBL1825,
 entresto,sacubitril,1656328,CHEMBL3137301,Neprilysin inhibitor,INHIBITOR,CHEMBL1944,Neprilysin,SINGLE PROTEIN,Homo sapiens,P08473,1,auto
 entresto,valsartan,69749,CHEMBL1069,Type-1 angiotensin II receptor antagonist,ANTAGONIST,CHEMBL227,Type-1 angiotensin II receptor,SINGLE PROTEIN,Homo sapiens,P30556,2,auto
 farxiga,dapagliflozin,1488564,CHEMBL429910,Sodium/glucose cotransporter 2 inhibitor,INHIBITOR,CHEMBL3884,Sodium/glucose cotransporter 2,SINGLE PROTEIN,Homo sapiens,P31639,1,auto
-ibrance,palbociclib,,CHEMBL189963,,,CHEMBL2111455,CDK6/cyclin D1,,Homo sapiens,P24385,1,manual
+ibrance,palbociclib,,CHEMBL189963,,,CHEMBL1907601,Cyclin-dependent kinase 4/cyclin D1,,Homo sapiens,P11802,1,manual
 ibrance,palbociclib,,CHEMBL189963,,,CHEMBL2111455,CDK6/cyclin D1,,Homo sapiens,Q00534,2,manual
-ibrance,palbociclib,,CHEMBL189963,,,CHEMBL1907601,Cyclin-dependent kinase 4/cyclin D1,,Homo sapiens,P11802,3,manual
+ibrance,palbociclib,,CHEMBL189963,,,CHEMBL2111455,CDK6/cyclin D1,,Homo sapiens,P24385,3,manual
 imbruvica,ibrutinib,1442981,CHEMBL1873475,Tyrosine-protein kinase BTK inhibitor,INHIBITOR,CHEMBL5251,Tyrosine-protein kinase BTK,SINGLE PROTEIN,Homo sapiens,Q06187,1,auto
 janumet,sitagliptin,593411,CHEMBL1422,Dipeptidyl peptidase IV inhibitor,INHIBITOR,CHEMBL284,Dipeptidyl peptidase 4,SINGLE PROTEIN,Homo sapiens,P27487,1,auto
 janumet,metformin,,CHEMBL1431,,,CHEMBL3391681,"Glycerol-3-phosphate dehydrogenase, mitochondrial",,Homo sapiens,P43304,2,manual
