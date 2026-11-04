@@ -5,7 +5,7 @@ Claude: read this first every session. Tick items as you finish them, and add a 
 ## Day 1: data and crosswalk
 
 - [x] Run `make setup`, then `make validate` (reference tables pass)
-- [ ] ingest-cms: build `partd_drug_year.csv`; log the year range and latest-year gross total
+- [x] ingest-cms: build `partd_drug_year.csv`; log the year range and latest-year gross total
 - [ ] map-drug-targets: run `make map`; log coverage
 - [ ] map-drug-targets: hand-map failures in `manual_mappings.csv`
 - [ ] map-drug-targets: classify every human target in `target_classes.csv`
@@ -40,3 +40,4 @@ Claude: read this first every session. Tick items as you finish them, and add a 
 
 - 2026-11-02 - Scaffold created: contracts, skills, hook, reference data (25 drugs; 15 second-cycle prices from news coverage, unverified)
 - 2026-11-03 - Setup: git repo initialised, `make setup` built .venv (Python 3.14), `make validate` PASS all tables. Next: ingest-cms.
+- 2026-11-03 - ingest-cms: `make ingest` fetched 14,536 CMS rows -> 16,429 drug-year rows, contract passed. Years 2020-2024. Latest-year (2024) gross Part D spend total $288,667,842,058 (all drugs, before rebates). Eliquis 2024 gross $20.77B, 24.06M claims. Doubt: Eliquis not yet spot-checked by eye in the CMS data viewer (only the API rows the pipeline read).
