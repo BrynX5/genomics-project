@@ -32,6 +32,12 @@ Claude: read this first every session. Tick items as you finish them, and add a 
 
 ## Extensions (out of scope until gate 2 passes)
 
+Approved by the owner on 2026-11-03, after gate 2 passed. Firm track:
+
+- [ ] **Q3a firm exposure:** each parent firm's gross 2024 Part D spend, and the share in negotiated drugs (CMS manufacturer rows + parent mapping)
+- [ ] **Q3b what explains the cut:** Orange Book / Purple Book exclusivity and 10-K product revenue vs list-to-negotiated cut (attacks the Q2 confounding)
+- [ ] **Q3c promotion:** Open Payments manufacturer payments to prescribers for the negotiated drugs, before vs after selection, joined to Part D Prescribers by NPI
+
 1. Scale the crosswalk to every Part D drug, 2019-2024
 2. Add the 2028 cycle (first Part B drugs) once negotiated prices are published
 3. Reactome pathway enrichment, negotiated vs non-negotiated targets

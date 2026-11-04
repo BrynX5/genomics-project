@@ -4,6 +4,8 @@ One entry per decision that changes a contract, the scope, or a method. Newest f
 
 Format: `YYYY-MM-DD - decision - why - what changed`
 
+- 2026-11-03 - Scope extended to a firm track (Q3a exposure, Q3b drivers of the cut, Q3c promotion), approved by the owner after gate 2 - the target view could not answer Q2; firm economics might - docs/status.md Extensions
+
 - 2026-11-03 - New processed table `class_summary` (Q1 gross spend and Q2 price-cut stats by target class), approved by the owner - README rule 3 needs every class-level number to come from data/processed - `contracts.CLASS_SUMMARY`, `analysis.class_summary`
 - 2026-11-03 - Wording fix to the list_price_30d_usd descriptions in negotiated_drugs and price_cuts: list prices are CY2023 WAC for cycle 2026 and CY2024 WAC for cycle 2027, not "2024" for all - the CMS fact sheets say so - descriptions only, no rule changed
 - 2026-11-03 - Metformin hand-mapped to one target (GPD2) instead of ChEMBL's ~50 complex I subunits, by owner decision - the subunits would swamp target counts - `manual_mappings.csv`
