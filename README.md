@@ -2,9 +2,9 @@
 
 This project links the 25 Medicare Part D drugs to the human proteins they act on. It then find which protein targets receive the most gross Part D spend, and if negotiation affected list prices differently between target classes. The project uses data to turn the price list into graphics and data about how gross Part D spend is distributed across the 25 drugs.
 
-## Main Findings
+## Findings
 
-1. **Three targets make up over half the gross spend.** Out of the $102.1B gross Part D spend in 2024, factor Xa (F10; Eliquis, Xarelto) takes 26.5% ($27.0B), SGLT2 (SLC5A2; Farxiga, Jardiance) takes 16.4%, and the GLP-1 receptor (semaglutide) takes 14.9%. The next target, DPP-4, takes 5.4%. By class, proteases take 33.8% of gross spend, GPCRs take 22.1%, and transporters take 18.0%.
+1. **Three targets make up over half the gross spend.** Out of the $102.1B spent on 25 negotiated drugs from Medicare Part D in 2024, factor Xa (F10; Eliquis, Xarelto) takes 26.5% ($27.0B), SGLT2 (SLC5A2; Farxiga, Jardiance) takes 16.4%, and the GLP-1 receptor (semaglutide) takes 14.9%. The next target, DPP-4, takes 5.4%. By class, proteases take 33.8% of gross spend, GPCRs take 22.1%, and transporters take 18.0%.
 2. **Kinase-targeted drugs had the lowest median list price cut, but with a small sample size.** The median difference between list price and negotiated price was 49.7% for the 5 drugs whose primary target is a kinase, 70.2% for proteases (6 drugs), and 73.2% for nuclear receptors (3 drugs). For individual drugs, price cuts ran from 37.6% (Imbruvica, BTK) to 84.8% (Janumet, DPP-4).
 3. **Target class and list price level are confounded.** Four of the five kinase drugs are high-list-price specialty drugs (Imbruvica, Calquence, Ofev, Ibrance: $12,622 to $15,741 list price per 30 days) with cuts of 37.6% to 50.0%. The fifth, NovoLog/Fiasp ($495 list price, via the insulin receptor), was cut by 76.0%. But a high list price does not always mean a small cut (Pomalyst, $21,744, cut 60.2%), and some lower-priced drugs had small cuts (Vraylar, $1,376, cut 44.0%). With 1 to 6 drugs per class, the data cannot separate target class from list price level or negotiation cycle.
 
