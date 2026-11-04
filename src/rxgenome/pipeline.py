@@ -198,8 +198,14 @@ def map_targets() -> None:
     write_validated(dt.drop(columns=["_ing", "_seq"]), DRUG_TARGET)
 
     still = [f for f in failures if (f[0], f[1]) not in manual_keys]
+    # mapped, but only to non-human targets (e.g. rifaximin -> bacterial RNA polymerase)
+    human = dt["organism"].fillna("").str.contains("Homo sapiens") & dt["uniprot"].notna()
+    for (drug_id, ingredient), g in dt.groupby(["drug_id", "ingredient"]):
+        if not human[g.index].any():
+            orgs = ", ".join(sorted(g["organism"].fillna("unknown").unique()))
+            still.append((drug_id, ingredient, f"no human target; ChEMBL targets are {orgs}"))
     write_validated(pd.DataFrame(still, columns=UNMAPPED.column_names), UNMAPPED)
-    n = dt.loc[dt["organism"].fillna("").str.contains("Homo sapiens") & dt["uniprot"].notna(), "drug_id"].nunique()
+    n = dt.loc[human, "drug_id"].nunique()
     print(f"[map] {n}/{len(nd)} drugs have a human target; {len(still)} ingredients unmapped")
 
 
