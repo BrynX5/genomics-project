@@ -1,1 +1,42 @@
 uniprot,gene_symbol,target_class,source_url
+Q05940,SLC18A2,Transporter,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL1893.json
+P04150,NR3C1,Nuclear receptor,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL2034.json
+P07550,ADRB2,GPCR,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL210.json
+Q06187,BTK,Kinase,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL5251.json
+P00742,F10,Protease,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL244.json
+P01375,TNF,Cytokine or receptor,https://rest.uniprot.org/uniprotkb/P01375.json
+P08473,MME,Protease,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL1944.json
+P30556,AGTR1,GPCR,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL227.json
+P31639,SLC5A2,Transporter,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL3884.json
+P24385,CCND1,Other,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL3610.json
+Q00534,CDK6,Kinase,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL2508.json
+P11802,CDK4,Kinase,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL331.json
+P27487,DPP4,Protease,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL284.json
+P43304,GPD2,Other enzyme,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL3391681.json
+P25092,GUCY2C,Other enzyme,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL1795197.json
+P06213,INSR,Kinase,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL1981.json
+P09619,PDGFRB,Kinase,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL1913.json
+P16234,PDGFRA,Kinase,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL2007.json
+P17948,FLT1,Kinase,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL1868.json
+P35916,FLT4,Kinase,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL1955.json
+P35968,KDR,Kinase,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL279.json
+P22607,FGFR3,Kinase,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL2742.json
+P11362,FGFR1,Kinase,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL3650.json
+P22455,FGFR4,Kinase,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL3973.json
+P21802,FGFR2,Kinase,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL4142.json
+P27815,PDE4A,Other enzyme,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL254.json
+Q08499,PDE4D,Other enzyme,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL288.json
+Q07343,PDE4B,Other enzyme,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL275.json
+Q08493,PDE4C,Other enzyme,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL291.json
+Q96SW2,CRBN,Other,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL3763008.json
+Q16531,DDB1,Other,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL5465550.json
+Q13619,CUL4A,Other,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL4523598.json
+P62877,RBX1,Other enzyme,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL6067545.json
+P43220,GLP1R,GPCR,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL1784.json
+P29460,IL12B,Cytokine or receptor,https://rest.uniprot.org/uniprotkb/P29460.json
+P29459,IL12A,Cytokine or receptor,https://rest.uniprot.org/uniprotkb/P29459.json
+Q9NPF7,IL23A,Cytokine or receptor,https://rest.uniprot.org/uniprotkb/Q9NPF7.json
+P20309,CHRM3,GPCR,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL245.json
+P35462,DRD3,GPCR,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL234.json
+P14416,DRD2,GPCR,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL217.json
+P10275,AR,Nuclear receptor,https://www.ebi.ac.uk/chembl/api/data/target/CHEMBL1871.json
