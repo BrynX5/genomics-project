@@ -131,6 +131,22 @@ def test_end_to_end_synthetic(project):
     assert "unverified prices" in errs and "Findings" in errs
 
 
+def test_class_summary_rolls_up_by_class():
+    ts = pd.DataFrame({
+        "split_rule": ["equal", "equal", "equal", "first_target"], "spend_year": 2024,
+        "uniprot": [_fake_acc(1), _fake_acc(2), _fake_acc(3), _fake_acc(1)],
+        "target_class": ["Kinase", "Kinase", "GPCR", "Kinase"],
+        "gross_spend_usd": [30.0, 10.0, 60.0, 999.0],  # first_target row must be ignored
+    })
+    pc = pd.DataFrame({"target_class": ["Kinase", "Kinase", "Protease", None], "pct_cut": [0.4, 0.6, 0.8, 0.5]})
+    cs = analysis.class_summary(ts, pc).set_index("target_class")
+    assert list(cs.index) == ["GPCR", "Kinase", "Protease"]  # sorted by spend; unclassed drug dropped
+    assert cs.loc["Kinase", "gross_spend_usd"] == 40 and cs.loc["Kinase", "share_of_total"] == 0.4
+    assert cs.loc["Kinase", "n_targets"] == 2 and cs.loc["Kinase", "median_pct_cut"] == 0.5
+    assert cs.loc["GPCR", "n_drugs_priced"] == 0 and pd.isna(cs.loc["GPCR", "median_pct_cut"])
+    assert cs.loc["Protease", "gross_spend_usd"] == 0 and cs.loc["Protease", "max_pct_cut"] == 0.8
+
+
 def test_gate1_reports_unmapped_drugs(project):
     _write_synthetic_inputs(project, skip={"eliquis", "xarelto", "ofev"})
     errs = "\n".join(validate.gate(1))

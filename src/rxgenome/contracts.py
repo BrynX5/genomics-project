@@ -109,7 +109,7 @@ NEGOTIATED_DRUGS = Table(
         Col("part", "str", "Medicare part that pays for it.", allowed=frozenset(PARTS)),
         Col("cms_generic_regex", "str", "Case-insensitive regex matched against CMS Gnrc_Name."),
         Col("cms_brand_regex", "str", "Case-insensitive regex matched against CMS Brnd_Name."),
-        Col("list_price_30d_usd", "float", "List price for a 30-day supply, 2024, USD.", required=False, min=0),
+        Col("list_price_30d_usd", "float", "List price (WAC) for a 30-day supply, USD, from the CMS fact sheet: CY2023 for cycle 2026, CY2024 for cycle 2027.", required=False, min=0),
         Col("negotiated_price_30d_usd", "float", "Negotiated (maximum fair) price for a 30-day supply, USD.", required=False, min=0),
         Col("price_source_url", "str", "Page the prices were copied from. Required when any price is filled.", required=False, pattern=RE_URL),
         Col("verified", "bool", "True only after the prices were checked against the official CMS fact sheet."),
@@ -258,7 +258,7 @@ PRICE_CUTS = Table(
         Col("brand", "str", "Brand name(s)."),
         Col("cycle", "int", "Negotiation cycle.", allowed=frozenset(CYCLES)),
         Col("target_class", "str", "Class of the drug's primary target.", required=False, allowed=frozenset(TARGET_CLASSES)),
-        Col("list_price_30d_usd", "float", "2024 list price, 30-day supply.", min=0),
+        Col("list_price_30d_usd", "float", "List price (WAC), 30-day supply: CY2023 for cycle 2026, CY2024 for cycle 2027.", min=0),
         Col("negotiated_price_30d_usd", "float", "Negotiated price, 30-day supply.", min=0),
         Col("pct_cut", "float", "1 - negotiated / list.", min=0, max=1),
         Col("verified", "bool", "Prices checked against the CMS fact sheet."),
@@ -269,12 +269,37 @@ PRICE_CUTS = Table(
     ),
 )
 
+CLASS_SUMMARY = Table(
+    name="class_summary",
+    path="data/processed/class_summary.csv",
+    layer="processed",
+    owner="analyze-question",
+    description="Q1 and Q2 rolled up to target class, so the README can quote class-level numbers. Gross spend, list prices.",
+    key=("target_class",),
+    columns=(
+        Col("target_class", "str", "From target_classes.", allowed=frozenset(TARGET_CLASSES)),
+        Col("spend_year", "int", "Year of the spending data.", min=2012, max=2030),
+        Col("gross_spend_usd", "float", "Gross spend attributed to the class's targets, equal split, USD.", min=0),
+        Col("share_of_total", "float", "Share of total attributed gross spend (equal split).", min=0, max=1),
+        Col("n_targets", "int", "Human targets in this class that carry spend.", min=0),
+        Col("n_drugs_priced", "int", "Drugs in price_cuts whose primary target is in this class.", min=0),
+        Col("median_pct_cut", "float", "Median list-to-negotiated cut among those drugs.", required=False, min=0, max=1),
+        Col("min_pct_cut", "float", "Smallest cut among those drugs.", required=False, min=0, max=1),
+        Col("max_pct_cut", "float", "Largest cut among those drugs.", required=False, min=0, max=1),
+    ),
+    checks=(
+        Check("shares sum to 1", lambda d: abs(d["share_of_total"].sum() - 1) < 1e-6),
+        Check("cut stats present exactly when drugs are priced",
+              lambda d: (d["n_drugs_priced"] > 0) == d["median_pct_cut"].notna()),
+    ),
+)
+
 TABLES: dict[str, Table] = {
     t.name: t
     for t in (
         NEGOTIATED_DRUGS, MANUAL_MAPPINGS, TARGET_CLASSES_REF,
         PARTD_DRUG_YEAR, DRUG_TARGET, UNMAPPED,
-        TARGET_SPEND, PRICE_CUTS,
+        TARGET_SPEND, PRICE_CUTS, CLASS_SUMMARY,
     )
 }
 

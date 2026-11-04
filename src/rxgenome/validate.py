@@ -203,7 +203,7 @@ def gate(n: int) -> list[str]:
             if miss:
                 errs.append(f"gate 1: no {latest} CMS spend rows matched for {miss}; fix cms_*_regex in negotiated_drugs")
     elif n == 2:
-        for name in ("target_spend", "price_cuts"):
+        for name in ("target_spend", "price_cuts", "class_summary"):
             if not (ROOT / TABLES[name].path).exists():
                 errs.append(f"gate 2: {TABLES[name].path} does not exist yet")
         for fig in ("q1_spend_by_target.png", "q1_spend_by_class.png", "q2_price_cut_by_class.png"):

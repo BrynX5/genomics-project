@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import pandas as pd
 
-from rxgenome.contracts import PRICE_CUTS, TARGET_SPEND
+from rxgenome.contracts import CLASS_SUMMARY, PRICE_CUTS, TARGET_SPEND
 from rxgenome.validate import ROOT, load
 
 FIG = ROOT / "figures"
@@ -76,6 +76,20 @@ def q2_price_cuts() -> pd.DataFrame:
     p = p.merge(primary[["drug_id", "target_class"]], on="drug_id", how="left")
     p["pct_cut"] = 1 - p["negotiated_price_30d_usd"].astype(float) / p["list_price_30d_usd"].astype(float)
     return p.sort_values("pct_cut", ascending=False)[PRICE_CUTS.column_names]
+
+
+def class_summary(ts: pd.DataFrame, pc: pd.DataFrame) -> pd.DataFrame:
+    """Q1 (equal split) and Q2 rolled up to target class. Drugs with no classed primary target are left out of Q2."""
+    eq = ts[ts["split_rule"] == "equal"].dropna(subset=["target_class"])
+    q1 = eq.groupby("target_class").agg(gross_spend_usd=("gross_spend_usd", "sum"), n_targets=("uniprot", "nunique"))
+    q1["share_of_total"] = q1["gross_spend_usd"] / q1["gross_spend_usd"].sum()
+    q2 = pc.dropna(subset=["target_class"]).groupby("target_class")["pct_cut"].agg(
+        n_drugs_priced="count", median_pct_cut="median", min_pct_cut="min", max_pct_cut="max")
+    out = q1.join(q2, how="outer").reset_index()
+    out[["gross_spend_usd", "share_of_total"]] = out[["gross_spend_usd", "share_of_total"]].fillna(0.0)
+    out[["n_targets", "n_drugs_priced"]] = out[["n_targets", "n_drugs_priced"]].fillna(0).astype(int)
+    out["spend_year"] = int(ts["spend_year"].iloc[0])
+    return out.sort_values("gross_spend_usd", ascending=False)[CLASS_SUMMARY.column_names]
 
 
 # ----------------------------------------------------------------------------- figures
@@ -145,6 +159,7 @@ def main() -> None:
     ts, pc = q1_target_spend(), q2_price_cuts()
     write_validated(ts, TARGET_SPEND)
     write_validated(pc, PRICE_CUTS)
+    write_validated(class_summary(ts, pc), CLASS_SUMMARY)
     figures(ts, pc)
     print(f"[ok] figures written to {FIG.relative_to(ROOT)}/")
 
