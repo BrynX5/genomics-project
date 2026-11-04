@@ -175,6 +175,28 @@ def test_firm_exposure_by_parent():
     assert fe.loc["BMS", "negotiated_drugs"] == "eliquis" and fe.loc["BMS", "spend_year"] == 2024
 
 
+def test_monopoly_tier_boundaries():
+    # 42 U.S.C. 1320f-3(c): extended = at least 12 but fewer than 16 years; long = at least 16
+    assert [analysis.monopoly_tier(y) for y in (11.99, 12.0, 15.99, 16.0)] == ["short", "extended", "extended", "long"]
+
+
+def test_cut_drivers_and_stats():
+    pc = pd.DataFrame({"drug_id": ["a", "b", "c"], "brand": ["A", "B", "C"], "cycle": [2026, 2026, 2027],
+                       "pct_cut": [0.4, 0.6, 0.8], "list_price_30d_usd": [900.0, 500.0, 100.0],
+                       "target_class": ["Kinase", None, "GPCR"]})
+    fa = pd.DataFrame({"drug_id": ["a", "b", "c"], "approval_date": ["2015-08-29", "2010-08-29", "2005-01-17"]})
+    cd = pd.DataFrame({"cycle": [2026, 2027], "selected_drug_publication_date": ["2023-08-29", "2025-01-17"]})
+    fe = pd.DataFrame({"parent_firm": ["F", "G"], "share_negotiated": [0.2, 0.9], "negotiated_drugs": ["a;b", "c"]})
+    cdr = analysis.cut_drivers(pc, fa, cd, fe).set_index("drug_id")
+    assert round(cdr.loc["a", "years_since_approval"], 1) == 8.0 and cdr.loc["a", "monopoly_tier"] == "short"
+    assert cdr.loc["b", "monopoly_tier"] == "extended" and cdr.loc["c", "monopoly_tier"] == "long"
+    assert cdr.loc["c", "ceiling_pct_of_nonfamp"] == 0.40 and cdr.loc["b", "parent_firm"] == "F"
+    st = analysis.cut_driver_stats(cdr.reset_index()).set_index(["statistic", "variable"])
+    assert st.loc[("spearman_rho", "list_price_30d_usd"), "value"] == pytest.approx(-1.0)  # perfectly inverse ranks
+    assert st.loc[("spearman_rho", "years_since_approval"), "value"] == pytest.approx(1.0)
+    assert st.loc[("median_cut", "long"), "value"] == 0.8 and st.loc[("median_cut", "long"), "n"] == 1
+
+
 def test_gate1_reports_unmapped_drugs(project):
     _write_synthetic_inputs(project, skip={"eliquis", "xarelto", "ofev"})
     errs = "\n".join(validate.gate(1))

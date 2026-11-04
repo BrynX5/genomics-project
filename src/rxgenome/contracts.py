@@ -43,6 +43,8 @@ RE_CHEMBL = r"^CHEMBL\d+$"
 RE_UNIPROT = r"^(?:[OPQ][0-9][A-Z0-9]{3}[0-9]|[A-NR-Z][0-9](?:[A-Z][A-Z0-9]{2}[0-9]){1,2})$"
 RE_URL = r"^https://\S+$"
 RE_DIGITS = r"^\d+$"
+RE_DATE = r"^\d{4}-\d{2}-\d{2}$"
+MONOPOLY_TIERS = {"short", "extended", "long"}  # 42 U.S.C. 1320f-3(c): <12, 12-16, >=16 years since approval
 
 
 # ----------------------------------------------------------------------------- spec types
@@ -199,6 +201,36 @@ PARTD_MFTR_YEAR = Table(
     ),
 )
 
+FDA_APPROVALS = Table(
+    name="fda_approvals",
+    path="data/reference/fda_approvals.csv",
+    layer="reference",
+    owner="curate-reference",
+    description="FDA original approval (or licensure) date per negotiated drug: the earliest among the brands CMS groups under it.",
+    key=("drug_id",),
+    columns=(
+        Col("drug_id", "str", "From negotiated_drugs.", pattern=RE_SLUG),
+        Col("application_number", "str", "NDA or BLA number of the earliest approved application.", pattern=r"^(NDA|BLA)\d{6}$"),
+        Col("approval_date", "str", "Date of the original approval (ORIG, AP) submission, YYYY-MM-DD.", pattern=RE_DATE),
+        Col("source_url", "str", "openFDA drugsfda query for that application.", pattern=RE_URL),
+        Col("notes", "str", "Which later applications were passed over.", required=False),
+    ),
+)
+
+CYCLE_DATES = Table(
+    name="cycle_dates",
+    path="data/reference/cycle_dates.csv",
+    layer="reference",
+    owner="curate-reference",
+    description="Selected drug publication date for each negotiation cycle, from the CMS selected-drug fact sheets.",
+    key=("cycle",),
+    columns=(
+        Col("cycle", "int", "Initial price applicability year.", allowed=frozenset(CYCLES)),
+        Col("selected_drug_publication_date", "str", "Date CMS published the selected drug list, YYYY-MM-DD.", pattern=RE_DATE),
+        Col("source_url", "str", "CMS fact sheet that states the date.", pattern=RE_URL),
+    ),
+)
+
 PARTD_DRUG_YEAR = Table(
     name="partd_drug_year",
     path="data/interim/partd_drug_year.csv",
@@ -350,12 +382,50 @@ FIRM_EXPOSURE = Table(
     ),
 )
 
+CUT_DRIVERS = Table(
+    name="cut_drivers",
+    path="data/processed/cut_drivers.csv",
+    layer="processed",
+    owner="analyze-question",
+    description="Q3b: per drug, the list-to-negotiated cut next to candidate explanations. List prices, not net.",
+    key=("drug_id",),
+    columns=(
+        Col("drug_id", "str", "From negotiated_drugs.", pattern=RE_SLUG),
+        Col("brand", "str", "Brand name(s)."),
+        Col("cycle", "int", "Negotiation cycle.", allowed=frozenset(CYCLES)),
+        Col("pct_cut", "float", "1 - negotiated / list price (from price_cuts).", min=0, max=1),
+        Col("list_price_30d_usd", "float", "List price (WAC), 30-day supply.", min=0),
+        Col("years_since_approval", "float", "Years from FDA approval to the cycle's selected drug publication date.", min=0),
+        Col("monopoly_tier", "str", "short (<12 y), extended (12-16 y) or long (>=16 y), the statute's ceiling tiers.", allowed=frozenset(MONOPOLY_TIERS)),
+        Col("ceiling_pct_of_nonfamp", "float", "Statutory price ceiling for the tier, as a share of non-FAMP (not of list price): 0.75, 0.65 or 0.40.", min=0, max=1),
+        Col("target_class", "str", "Class of the primary target (from price_cuts).", required=False, allowed=frozenset(TARGET_CLASSES)),
+        Col("parent_firm", "str", "Parent firm of the drug's CMS labeler (from firm_exposure).", required=False),
+        Col("firm_share_negotiated", "float", "That firm's share of 2024 gross Part D spend in negotiated drugs.", required=False, min=0, max=1),
+    ),
+)
+
+CUT_DRIVER_STATS = Table(
+    name="cut_driver_stats",
+    path="data/processed/cut_driver_stats.csv",
+    layer="processed",
+    owner="analyze-question",
+    description="Q3b summary: rank correlations of the cut with each driver, and the median cut by monopoly tier.",
+    key=("statistic", "variable"),
+    columns=(
+        Col("statistic", "str", "spearman_rho (cut vs variable) or median_cut (cut within a tier).", allowed=frozenset({"spearman_rho", "median_cut"})),
+        Col("variable", "str", "Driver name, or the tier for median_cut."),
+        Col("value", "float", "The statistic.", min=-1, max=1),
+        Col("n", "int", "Drugs used.", min=1),
+        Col("p_value", "float", "Two-sided permutation p-value (10,000 shuffles, seed 0); empty for medians.", required=False, min=0, max=1),
+    ),
+)
+
 TABLES: dict[str, Table] = {
     t.name: t
     for t in (
-        NEGOTIATED_DRUGS, MANUAL_MAPPINGS, TARGET_CLASSES_REF, FIRM_LABELERS,
+        NEGOTIATED_DRUGS, MANUAL_MAPPINGS, TARGET_CLASSES_REF, FIRM_LABELERS, FDA_APPROVALS, CYCLE_DATES,
         PARTD_DRUG_YEAR, PARTD_MFTR_YEAR, DRUG_TARGET, UNMAPPED,
-        TARGET_SPEND, PRICE_CUTS, CLASS_SUMMARY, FIRM_EXPOSURE,
+        TARGET_SPEND, PRICE_CUTS, CLASS_SUMMARY, FIRM_EXPOSURE, CUT_DRIVERS, CUT_DRIVER_STATS,
     )
 }
 
@@ -378,5 +448,6 @@ CROSS_CHECKS: list[tuple[str, CrossCheck]] = [
     ("drug_target.drug_id exists", _fk("drug_target", "drug_id", "negotiated_drugs", "drug_id")),
     ("unmapped.drug_id exists", _fk("unmapped", "drug_id", "negotiated_drugs", "drug_id")),
     ("price_cuts.drug_id exists", _fk("price_cuts", "drug_id", "negotiated_drugs", "drug_id")),
+    ("fda_approvals.drug_id exists", _fk("fda_approvals", "drug_id", "negotiated_drugs", "drug_id")),
     ("every target in target_spend has a class", _fk("target_spend", "uniprot", "target_classes", "uniprot")),
 ]

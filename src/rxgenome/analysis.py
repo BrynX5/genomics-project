@@ -17,7 +17,8 @@ import re
 
 import pandas as pd
 
-from rxgenome.contracts import CLASS_SUMMARY, FIRM_EXPOSURE, PRICE_CUTS, TARGET_SPEND
+from rxgenome.contracts import (CLASS_SUMMARY, CUT_DRIVER_STATS, CUT_DRIVERS, FIRM_EXPOSURE, PRICE_CUTS,
+                                TARGET_SPEND)
 from rxgenome.validate import ROOT, load
 
 FIG = ROOT / "figures"
@@ -120,6 +121,53 @@ def firm_exposure(nd: pd.DataFrame, mf: pd.DataFrame, fl: pd.DataFrame) -> pd.Da
     return out.sort_values("share_negotiated", ascending=False)[FIRM_EXPOSURE.column_names]
 
 
+# 42 U.S.C. 1320f-3(c)(3)-(5): price ceiling as a share of non-FAMP, by years since approval
+CEILING = {"short": 0.75, "extended": 0.65, "long": 0.40}
+
+
+def monopoly_tier(years: float) -> str:
+    return "long" if years >= 16 else "extended" if years >= 12 else "short"
+
+
+def cut_drivers(pc: pd.DataFrame, fa: pd.DataFrame, cd: pd.DataFrame, fe: pd.DataFrame | None) -> pd.DataFrame:
+    """Q3b: each drug's cut next to its years on market (and statutory tier), list price and firm exposure."""
+    d = pc.merge(fa[["drug_id", "approval_date"]], on="drug_id", how="left") \
+          .merge(cd[["cycle", "selected_drug_publication_date"]], on="cycle", how="left")
+    days = pd.to_datetime(d["selected_drug_publication_date"]) - pd.to_datetime(d["approval_date"])
+    d["years_since_approval"] = days.dt.days / 365.25
+    d["monopoly_tier"] = d["years_since_approval"].map(monopoly_tier)
+    d["ceiling_pct_of_nonfamp"] = d["monopoly_tier"].map(CEILING)
+    if fe is not None:
+        firm = fe.dropna(subset=["negotiated_drugs"]).assign(drug_id=lambda f: f["negotiated_drugs"].str.split(";")) \
+                 .explode("drug_id")[["drug_id", "parent_firm", "share_negotiated"]]
+        d = d.merge(firm.rename(columns={"share_negotiated": "firm_share_negotiated"}), on="drug_id", how="left")
+    else:
+        d["parent_firm"], d["firm_share_negotiated"] = pd.NA, pd.NA
+    return d.sort_values("years_since_approval", ascending=False)[CUT_DRIVERS.column_names]
+
+
+def _spearman_perm(x: pd.Series, y: pd.Series, n_perm: int = 10_000, seed: int = 0) -> tuple[float, float, int]:
+    import numpy as np
+
+    ok = x.notna() & y.notna()
+    rx, ry = x[ok].rank().to_numpy(), y[ok].rank().to_numpy()
+    rho = float(np.corrcoef(rx, ry)[0, 1])
+    rng = np.random.default_rng(seed)
+    null = np.array([np.corrcoef(rx, rng.permutation(ry))[0, 1] for _ in range(n_perm)])
+    p = float((np.sum(np.abs(null) >= abs(rho) - 1e-12) + 1) / (n_perm + 1))
+    return rho, p, int(ok.sum())
+
+
+def cut_driver_stats(cdr: pd.DataFrame) -> pd.DataFrame:
+    rows = []
+    for var in ("years_since_approval", "list_price_30d_usd", "firm_share_negotiated", "cycle"):
+        rho, p, n = _spearman_perm(cdr[var].astype(float), cdr["pct_cut"].astype(float))
+        rows.append({"statistic": "spearman_rho", "variable": var, "value": rho, "n": n, "p_value": p})
+    for tier, g in cdr.groupby("monopoly_tier"):
+        rows.append({"statistic": "median_cut", "variable": tier, "value": g["pct_cut"].median(), "n": len(g), "p_value": None})
+    return pd.DataFrame(rows)[CUT_DRIVER_STATS.column_names]
+
+
 # ----------------------------------------------------------------------------- figures
 def figures(ts: pd.DataFrame, pc: pd.DataFrame) -> None:
     import matplotlib
@@ -182,6 +230,38 @@ def figures(ts: pd.DataFrame, pc: pd.DataFrame) -> None:
     plt.close(fig)
 
 
+def cut_driver_figure(cdr: pd.DataFrame) -> None:
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    FIG.mkdir(exist_ok=True)
+    colors = {"short": "#3b6ea8", "extended": "#e08a2c", "long": "#c0392b"}
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4.6), sharey=True)
+    for ax, col, xlabel in ((axes[0], "years_since_approval", "Years from FDA approval to selection"),
+                            (axes[1], "list_price_30d_usd", "List price, 30-day supply (USD, log scale)")):
+        for tier, g in cdr.groupby("monopoly_tier"):
+            ax.scatter(g[col], g["pct_cut"] * 100, color=colors[tier], label=f"{tier} ({len(g)})", zorder=3)
+        for r in cdr.itertuples():
+            ax.annotate(r.brand.split(";")[0], (getattr(r, col), r.pct_cut * 100), xytext=(4, 2),
+                        textcoords="offset points", fontsize=6.5, color="#333")
+        ax.set_xlabel(xlabel)
+    axes[0].axvline(12, color="#999", ls=":", lw=1)
+    axes[0].axvline(16, color="#999", ls=":", lw=1)
+    axes[1].set_xscale("log")
+    axes[0].set_ylabel("Cut from list price to negotiated price (%)")
+    axes[0].set_ylim(0, 100)
+    axes[0].legend(title="Statutory tier", fontsize=8, title_fontsize=8, loc="lower right")
+    fig.suptitle("What tracks the negotiated price cut?", x=0.01, ha="left")
+    fig.text(0.01, 0.01, "List price (WAC) vs negotiated price, both before rebates. Dotted lines: 12 and 16 years, where the statutory "
+             "ceiling drops\nfrom 75% to 65% to 40% of non-FAMP (a different base from list price). Sources: CMS fact sheets, openFDA.",
+             fontsize=7.5, color="#555")
+    fig.tight_layout(rect=(0, 0.07, 1, 0.96))
+    fig.savefig(FIG / "q3b_cut_drivers.png", dpi=200)
+    plt.close(fig)
+
+
 def main() -> None:
     from rxgenome.pipeline import write_validated
 
@@ -192,6 +272,12 @@ def main() -> None:
     fl, mf = load("firm_labelers"), load("partd_mftr_year")
     if fl is not None and mf is not None:  # Q3a is an extension; skip it until its inputs exist
         write_validated(firm_exposure(_need("negotiated_drugs"), mf, fl), FIRM_EXPOSURE)
+    fa, cd = load("fda_approvals"), load("cycle_dates")
+    if fa is not None and cd is not None:  # Q3b, likewise
+        cdr = cut_drivers(pc, fa, cd, load("firm_exposure"))
+        write_validated(cdr, CUT_DRIVERS)
+        write_validated(cut_driver_stats(cdr), CUT_DRIVER_STATS)
+        cut_driver_figure(cdr)
     figures(ts, pc)
     print(f"[ok] figures written to {FIG.relative_to(ROOT)}/")
 

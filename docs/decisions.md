@@ -4,6 +4,8 @@ One entry per decision that changes a contract, the scope, or a method. Newest f
 
 Format: `YYYY-MM-DD - decision - why - what changed`
 
+- 2026-11-03 - Q3b uses years since FDA approval (and the statutory monopoly tier) instead of Orange Book patent expiry; 10-K revenue dependence deferred to Q3b-ii - the statute's price ceiling is defined on approval age; patent dates are noisy; revenue data are incomplete for foreign and private firms - contracts FDA_APPROVALS, CYCLE_DATES, CUT_DRIVERS, CUT_DRIVER_STATS; `analysis.cut_drivers`, `analysis.cut_driver_stats`
+
 - 2026-11-03 - Q3a firm = parent company, rolled up from CMS labeler names, by owner decision; joint ventures (ViiV), spun-off companies (Sandoz, Organon, Viatris) and separately listed majority-owned companies (Bausch & Lomb) are left out - ownership in the 2024 spend year is what counts, and each link must have a source - new contracts FIRM_LABELERS, PARTD_MFTR_YEAR, FIRM_EXPOSURE; `pipeline.reshape_cms_mftr`, `analysis.firm_exposure`
 
 - 2026-11-03 - Scope extended to a firm track (Q3a exposure, Q3b drivers of the cut, Q3c promotion), approved by the owner after gate 2 - the target view could not answer Q2; firm economics might - docs/status.md Extensions
